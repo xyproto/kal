@@ -73,7 +73,7 @@ func AtEasterPlus(t time.Time, days int) bool {
 }
 
 // Return the number of sundays from day t, +- a few days
-func SundaysInPeriod(t time.Time, days int) int {
+func sundaysInPeriod(t time.Time, days int) int {
 	sundayCounter := 0
 	when := t
 	if days < 0 {
@@ -92,18 +92,6 @@ func SundaysInPeriod(t time.Time, days int) int {
 		}
 	}
 	return sundayCounter
-}
-
-// Check if a day is at easterday +- a few days, not counting sundays
-// TODO: test
-func AtEasterPlusNotCountingSundays(t time.Time, days int) bool {
-	adjustedDays := days
-	if days < 0 {
-		adjustedDays += SundaysInPeriod(t, days)
-	} else {
-		adjustedDays -= SundaysInPeriod(t, days)
-	}
-	return AtEasterPlus(t, adjustedDays)
 }
 
 // Checks if the given year, month and day is a "red" in the Norwegian calendar
@@ -167,6 +155,12 @@ func nthSundayOfMonth(t time.Time, n int) (time.Time, error) {
 			return current, nil
 		}
 
+		// If it's a sunday, advance one week forward
+		if current.Weekday() == time.Sunday {
+			current = current.AddDate(0, 0, 7)
+			continue
+		}
+
 		// Advance to the next day
 		current = current.AddDate(0, 0, 1)
 	}
@@ -205,6 +199,13 @@ func AtFarsdag(t time.Time) bool {
 	return false
 }
 
+// Finds the norwegian name for a day of the week
+// Note that time.Weekday starts at 0 with Sunday, not Monday
+func NorwegianName(dayoftheweek time.Weekday) string {
+	days := []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}
+	return days[int(dayoftheweek)]
+}
+
 // Dates that are not red, but not completely ordinary either
 func NotableDate(date time.Time) (bool, string) {
 
@@ -218,9 +219,9 @@ func NotableDate(date time.Time) (bool, string) {
 		return true, "Påskeaften"
 	}
 
-	// Fetetirsdag
+	// Feitetirsdag
 	if AtEasterPlus(date, -47) {
-		return true, "Fetetirsdag"
+		return true, "Feitetirsdag"
 	}
 
 	// Fastelavn
@@ -330,9 +331,3 @@ func RedDate(date time.Time) (bool, string) {
 	return false, ""
 }
 
-// Finds the norwegian name for a day of the week
-// Note that time.Weekday starts at 0 with Sunday, not Monday
-func NorwegianName(dayoftheweek time.Weekday) string {
-	days := []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}
-	return days[int(dayoftheweek)]
-}
