@@ -7,28 +7,73 @@ import (
 	"github.com/xyproto/norwegiantime"
 )
 
-func main() {
-	month := 3
-	year := time.Now().Year()
-	fmt.Println(time.Month(month).String(), year)
-	fmt.Println("====================")
-	for day := 1; day <= 31; day++ {
-		if norwegiantime.RedDay(year, month, day) {
-			if day == 31 {
-				fmt.Println(day, ": "+"RØD (hvis den finnes)")
-			} else {
-				fmt.Println(day, ": "+"RØD!")
-			}
-		} else {
-			if day == 31 {
-				fmt.Println(day, ": "+"vanlig (hvis den finnes)")
-			} else {
-				fmt.Println(day, ": "+"vanlig")
-			}
+// List notable days
+func notable(year int) {
+	current := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
+
+	// As long as we are in the same year
+	for current.Year() == year {
+
+		if notable, desc := norwegiantime.NotableDate(current); notable {
+			fmt.Printf("%s %d is at %s\n", desc, year, current.String()[:10])
 		}
+
+		// Advance to the next day
+		current = current.AddDate(0, 0, 1)
 	}
 
 	fmt.Println()
-	m, d := norwegiantime.EasterDay(year)
-	fmt.Println("Påsken:", d, " ", time.Month(m).String())
+}
+
+// List all the days of a given month
+func datebonanza(year int, month time.Month) {
+	fmt.Println(month.String(), year)
+	fmt.Println("====================")
+
+	current := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC)
+
+	// As long as we are in the same month
+	for current.Month() == month {
+
+		if red, desc := norwegiantime.RedDate(current); red {
+			fmt.Printf("%s is red: %s\n", current.String()[:10], desc)
+		//} else {
+		//	fmt.Printf("%s\n", current.String()[:10])
+		}
+
+		if notable, desc := norwegiantime.NotableDate(current); notable {
+			fmt.Printf("%s is notable: %s\n", current.String()[:10], desc)
+		//} else {
+		//	fmt.Printf("%s\n", current.String()[:10])
+		}
+
+		// Advance to the next day
+		current = current.AddDate(0, 0, 1)
+	}
+	fmt.Println()
+}
+
+func main() {
+	//year := time.Now().Year()
+	year := 2013
+
+	// When is easter this year?
+	easter, err := norwegiantime.EasterDate(year)
+	if err != nil {
+		fmt.Println("Could not calculate easter for this year")
+	} else {
+		fmt.Printf("Easter %d is at %s\n", year, easter.String()[:10])
+	}
+
+	// Show some info for March this year
+	//datebonanza(year, time.Month(3))
+
+	// Show some info for March 2000
+	//datebonanza(2000, time.Month(3))
+
+	// Show some info for the current month
+	datebonanza(year, time.Month(time.Now().Month()))
+
+	notable(year)
+	notable(year+1)
 }
