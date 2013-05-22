@@ -209,6 +209,7 @@ func NorwegianName(dayoftheweek time.Weekday) string {
 
 // Dates that are not red, but not completely ordinary either
 // Some days may overlap, then a comma separated (", ") list will be returned
+// TODO: Caching
 func NotableDate(date time.Time) (bool, string) {
 
 	notable := []string{}
@@ -236,7 +237,27 @@ func NotableDate(date time.Time) (bool, string) {
 
 	// Feitetirsdag (tredje og siste dag i fastelavn, også kjent som Mardi Gras)
 	if AtEasterPlus(date, -47) {
-		notable = append(notable, "Feitetirsdag")
+		notable = append(notable, "Feitetirsdag (Mardi Gras)")
+	}
+
+	// Sankthansaften
+	if At(date, 6, 23) {
+		notable = append(notable, "Sankthansaften")
+	}
+
+	// Frigjøringsdagen
+	if At(date, 5, 8) {
+		notable = append(notable, "Frigjøringsdagen")
+	}
+
+	// Julaften
+	if At(date, 12, 24) {
+		notable = append(notable, "Julaften")
+	}
+
+	// Nyttårsaften
+	if At(date, 12, 31) {
+		notable = append(notable, "Nyttårsaften")
 	}
 
 	// Morsdag
@@ -249,10 +270,27 @@ func NotableDate(date time.Time) (bool, string) {
 		notable = append(notable, "Farsdag")
 	}
 
-	// Sankthansaften
-	if At(date, 6, 23) {
-		notable = append(notable, "Sankthansaften")
+	// Valentinsdagen
+	if At(date, 2, 14) {
+		notable = append(notable, "Valentinsdagen")
 	}
+
+	// Allehelgensaften (Halloween)
+	if At(date, 10, 31) {
+		notable = append(notable, "Allehelgensaften (Halloween)")
+	}
+
+	// Allehelgensdag
+	if At(date, 11, 1) {
+		notable = append(notable, "Allehelgensdag")
+	}
+
+	// Samefolkets dag
+	if At(date, 2, 6) {
+		notable = append(notable, "Samefolkets dag")
+	}
+
+	// TODO: http://www.timeanddate.no/kalender/merkedag-innhold
 
 	// If there are notable events, return them as a string
 	if len(notable) > 0 {
@@ -266,6 +304,7 @@ func NotableDate(date time.Time) (bool, string) {
 // Checks if a given date is a "red day" in the Norwegian calendar
 // Returns true/false and a description
 // The dates will never overlap
+// TODO: Caching
 func RedDate(date time.Time) (bool, string) {
 	// Source: http://www.diskusjon.no/index.php?showtopic=1084239
 	// Source: http://no.wikipedia.org/wiki/Helligdager_i_Norge

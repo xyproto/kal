@@ -37,14 +37,14 @@ func datebonanza(year int, month time.Month) {
 
 		if red, desc := norwegiantime.RedDate(current); red {
 			fmt.Printf("%s is red: %s\n", current.String()[:10], desc)
-		//} else {
-		//	fmt.Printf("%s\n", current.String()[:10])
+			//} else {
+			//	fmt.Printf("%s\n", current.String()[:10])
 		}
 
 		if notable, desc := norwegiantime.NotableDate(current); notable {
 			fmt.Printf("%s is notable: %s\n", current.String()[:10], desc)
-		//} else {
-		//	fmt.Printf("%s\n", current.String()[:10])
+			//} else {
+			//	fmt.Printf("%s\n", current.String()[:10])
 		}
 
 		// Advance to the next day
@@ -75,5 +75,5 @@ func main() {
 	datebonanza(year, time.Month(time.Now().Month()))
 
 	notable(year)
-	notable(year+1)
+	notable(year + 1)
 }
