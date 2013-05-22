@@ -2,8 +2,9 @@ package norwegiantime
 
 import (
 	"errors"
-	"time"
 	"fmt"
+	"strings"
+	"time"
 )
 
 // Gauss's algorithm for finding easter day for a given year
@@ -155,7 +156,7 @@ func nthSundayOfMonth(t time.Time, n int) (time.Time, error) {
 			return current, nil
 		}
 
-		// If it's a sunday, advance one week forward
+		// If it's a sunday, advance almost one week forward
 		if current.Weekday() == time.Sunday {
 			current = current.AddDate(0, 0, 7)
 			continue
@@ -207,52 +208,64 @@ func NorwegianName(dayoftheweek time.Weekday) string {
 }
 
 // Dates that are not red, but not completely ordinary either
+// Some days may overlap, then a comma separated (", ") list will be returned
 func NotableDate(date time.Time) (bool, string) {
+
+	notable := []string{}
 
 	// Askeonsdag (fasten begynner)
 	if AtEasterPlus(date, -46) {
-		return true, "Askeonsdag"
+		notable = append(notable, "Askeonsdag")
 	}
 
 	// Påskeaften (fasten slutter)
 	if AtEasterPlus(date, -1) {
-		return true, "Påskeaften"
+		notable = append(notable, "Påskeaften")
 	}
 
-	// Feitetirsdag
-	if AtEasterPlus(date, -47) {
-		return true, "Feitetirsdag"
-	}
-
-	// Fastelavn
+	// Fastelavnssøndag (første dag i fastelavn, festen før fasten)
+	// Source: http://www.aktivioslo.no/hvaskjer/fastelavn/
 	if AtEasterPlus(date, -49) {
-		return true, "Fastelavn"
+		notable = append(notable, "Fastelavnsøndag")
 	}
 
-	// Fastelavnsøndag
+	// Blåmandag (andre dag i fastelavn)
+	if AtEasterPlus(date, -48) {
+		notable = append(notable, "Blåmandag")
+	}
 
-	// Blåmandag
+	// Feitetirsdag (tredje og siste dag i fastelavn, også kjent som Mardi Gras)
+	if AtEasterPlus(date, -47) {
+		notable = append(notable, "Feitetirsdag")
+	}
 
 	// Morsdag
 	if AtMorsdag(date) {
-		return true, "Morsdag"
+		notable = append(notable, "Morsdag")
 	}
 
 	// Farsdag
 	if AtFarsdag(date) {
-		return true, "Farsdag"
+		notable = append(notable, "Farsdag")
 	}
 
 	// Sankthansaften
 	if At(date, 6, 23) {
-		return true, "Sankthansaften"
+		notable = append(notable, "Sankthansaften")
 	}
 
+	// If there are notable events, return them as a string
+	if len(notable) > 0 {
+		return true, strings.Join(notable, ", ")
+	}
+
+	// No notable events
 	return false, ""
 }
 
 // Checks if a given date is a "red day" in the Norwegian calendar
 // Returns true/false and a description
+// The dates will never overlap
 func RedDate(date time.Time) (bool, string) {
 	// Source: http://www.diskusjon.no/index.php?showtopic=1084239
 	// Source: http://no.wikipedia.org/wiki/Helligdager_i_Norge
@@ -330,4 +343,3 @@ func RedDate(date time.Time) (bool, string) {
 	// Normal days
 	return false, ""
 }
-
