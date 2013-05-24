@@ -14,8 +14,26 @@ func notable(year int) {
 	// As long as we are in the same year
 	for current.Year() == year {
 
-		if notable, desc := norwegiantime.NotableDate(current); notable {
-			fmt.Printf("%s %d is at %s\n", desc, year, current.String()[:10])
+		if notable, desc, flag := norwegiantime.NotableDate(current); notable {
+			fmt.Printf("%s %d is at %s (flag: %v)\n", desc, year, current.String()[:10], flag)
+		}
+
+		// Advance to the next day
+		current = current.AddDate(0, 0, 1)
+	}
+
+	fmt.Println()
+}
+
+// List flag days
+func flag(year int) {
+	current := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
+
+	// As long as we are in the same year
+	for current.Year() == year {
+
+		if flag := norwegiantime.FlagDate(current); flag {
+			fmt.Printf("%s (%s) is a flaggdag\n", norwegiantime.Describe(current), current.String()[:10])
 		}
 
 		// Advance to the next day
@@ -35,14 +53,14 @@ func datebonanza(year int, month time.Month) {
 	// As long as we are in the same month
 	for current.Month() == month {
 
-		if red, desc := norwegiantime.RedDate(current); red {
-			fmt.Printf("%s is red: %s\n", current.String()[:10], desc)
+		if red, desc, flag := norwegiantime.RedDate(current); red {
+			fmt.Printf("%s is red: %s (flag: %v)\n", current.String()[:10], desc, flag)
 			//} else {
 			//	fmt.Printf("%s\n", current.String()[:10])
 		}
 
-		if notable, desc := norwegiantime.NotableDate(current); notable {
-			fmt.Printf("%s is notable: %s\n", current.String()[:10], desc)
+		if notable, desc, flag := norwegiantime.NotableDate(current); notable {
+			fmt.Printf("%s is notable: %s (flag: %v)\n", current.String()[:10], desc, flag)
 			//} else {
 			//	fmt.Printf("%s\n", current.String()[:10])
 		}
@@ -58,12 +76,8 @@ func main() {
 	year := 2013
 
 	// When is easter this year?
-	easter, err := norwegiantime.EasterDate(year)
-	if err != nil {
-		fmt.Println("Could not calculate easter for this year")
-	} else {
-		fmt.Printf("Easter %d is at %s\n", year, easter.String()[:10])
-	}
+	easter := norwegiantime.EasterDate(year)
+	fmt.Printf("Easter %d is at %s\n", year, easter.String()[:10])
 
 	// Show some info for March this year
 	//datebonanza(year, time.Month(3))
@@ -76,4 +90,6 @@ func main() {
 
 	notable(year)
 	notable(year + 1)
+
+	flag(year)
 }

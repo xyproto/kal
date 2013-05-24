@@ -7,8 +7,28 @@ import (
 	"time"
 )
 
-// Gauss's algorithm for finding easter day for a given year
-func easterDay(year int) (month, day int, err error) {
+// Spencer Jones' formula from 1922
+func easterDay(year int) (month, day int) {
+	// Source: http://no.wikipedia.org/wiki/Påskeformelen
+	a := year % 19
+	b := year / 100
+	c := year % 100
+	d := b / 4
+	e := b % 4
+	f := (b + 8) / 25
+	g := (b - f + 1) / 3
+	h := (19*a + b - d - g + 15) % 30
+	i := c / 4
+	k := c % 4
+	l := (32 + 2*e + 2*i - h - k) % 7
+	m := (a + 11*h + 22*l) / 451
+	n := (h + l - 7*m + 114) / 31
+	p := (h + l - 7*m + 114) % 31
+	return n, p + 1
+}
+
+// Gauss's method for finding easter day for a given year
+func easterDayGauss(year int) (month, day int, err error) {
 	// Source: http://no.it.programmering.delphi.narkive.com/oDY0xYOW/algoritme-for-norske-bevegelige-helligdager
 	if (year < 1583) || (year > 4199) {
 		return 0, 0, errors.New("year out of range")
@@ -35,24 +55,21 @@ func easterDay(year int) (month, day int, err error) {
 	return month, day, nil
 }
 
-func EasterDate(year int) (time.Time, error) {
-	month, day, err := easterDay(year)
-	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC), err
+// Finds the easter day for a given year
+func EasterDate(year int) time.Time {
+	month, day := easterDay(year)
+	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 }
 
 // Checks if the given time is easter day
-func IsEaster(t time.Time) bool {
-	eastermonth, easterday, err := easterDay(t.Year())
-	if err != nil {
-		// If the year is out of range, treat it like there isn't an easter day
-		return false
-	}
-	return (t.Month() == time.Month(eastermonth)) && (t.Day() == easterday)
+func IsEaster(date time.Time) bool {
+	eastermonth, easterday := easterDay(date.Year())
+	return (date.Month() == time.Month(eastermonth)) && (date.Day() == easterday)
 }
 
 // Checks if the given time is at the given month and day
-func At(t time.Time, month, day int) bool {
-	return (t.Month() == time.Month(month)) && (t.Day() == day)
+func AtMD(date time.Time, month, day int) bool {
+	return (date.Month() == time.Month(month)) && (date.Day() == day)
 }
 
 // Checks if the two given times are at the same months and days
@@ -61,32 +78,28 @@ func AtDate(t, when time.Time) bool {
 }
 
 // Checks if a day is at easterday +- a few days
-func AtEasterPlus(t time.Time, days int) bool {
-	year := t.Year()
-	eastermonth, easterday, err := easterDay(year)
-	if err != nil {
-		// If the year is out of range, treat it like there isn't an easter day
-		return false
-	}
+func AtEasterPlus(date time.Time, days int) bool {
+	year := date.Year()
+	eastermonth, easterday := easterDay(year)
 	easter := time.Date(year, time.Month(eastermonth), easterday, 0, 0, 0, 0, time.UTC)
 	when := easter.AddDate(0, 0, days)
-	return AtDate(t, when)
+	return AtDate(date, when)
 }
 
 // Return the number of sundays from day t, +- a few days
-func sundaysInPeriod(t time.Time, days int) int {
+func sundaysInPeriod(date time.Time, days int) int {
 	sundayCounter := 0
-	when := t
+	when := date
 	if days < 0 {
 		for i := days; i <= 0; i++ {
-			when = t.AddDate(0, 0, i)
+			when = date.AddDate(0, 0, i)
 			if when.Weekday() == time.Sunday {
 				sundayCounter++
 			}
 		}
 	} else {
 		for i := 0; i <= days; i++ {
-			when = t.AddDate(0, 0, i)
+			when = date.AddDate(0, 0, i)
 			if when.Weekday() == time.Sunday {
 				sundayCounter++
 			}
@@ -96,18 +109,18 @@ func sundaysInPeriod(t time.Time, days int) int {
 }
 
 // Checks if the given year, month and day is a "red" in the Norwegian calendar
-// Returns true/false and a description
-func RedDay(year int, month time.Month, day int) (bool, string) {
+// Returns true/false, a description and true/false for if it's a flag day
+func RedDay(year int, month time.Month, day int) (bool, string, bool) {
 	return RedDate(time.Date(year, month, day, 0, 0, 0, 0, time.UTC))
 }
 
 // Find a preceeding sunday
-func searchBackwardsForSunday(t time.Time) (time.Time, error) {
+func searchBackwardsForSunday(date time.Time) (time.Time, error) {
 	// Start with the day before the given date
-	current := t.AddDate(0, 0, -1)
+	current := date.AddDate(0, 0, -1)
 
 	// Stay within the same year
-	for current.Year() == t.Year() {
+	for current.Year() == date.Year() {
 		// Check if it's a Sunday
 		if current.Weekday() == time.Sunday {
 			// Found one
@@ -120,31 +133,37 @@ func searchBackwardsForSunday(t time.Time) (time.Time, error) {
 
 	// This should never happen, since we will only be searching
 	// from easter day and backwards
-	return t, errors.New("Could not find an earlier Sunday!")
+	return date, errors.New("Could not find an earlier Sunday!")
+}
+
+// Get the week number, from 1 to 53
+func Week(date time.Time) int {
+	_, weeknum := date.ISOWeek()
+	return weeknum
 }
 
 // Checks if the given date is at Palmesøndag
 // Palmesøndag is the Sunday before easter (Første Påskedag)
-func AtPalmesøndag(t time.Time) bool {
-	easter, err := EasterDate(t.Year())
+func AtPalmSunday(date time.Time) bool {
+	easter := EasterDate(date.Year())
+	palmSunday, err := searchBackwardsForSunday(easter)
 	if err != nil {
-		// If the year is out of range, treat it like there isn't an easter day
+		// This should not happen, there should always be a sunday before easter for any given year
 		return false
 	}
-	palmesøndag, err := searchBackwardsForSunday(easter)
-	return AtDate(t, palmesøndag)
+	return AtDate(date, palmSunday)
 }
 
 // Find the Nth sunday of a given year and month
-func nthSundayOfMonth(t time.Time, n int) (time.Time, error) {
+func nthSundayOfMonth(date time.Time, n int) (time.Time, error) {
 
 	sundaycounter := 0
 
 	// Start at the first day in the given month
-	current := time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, time.UTC)
+	current := time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.UTC)
 
 	// As long as we are in the same month
-	for current.Month() == t.Month() {
+	for current.Month() == date.Month() {
 
 		// Is it a Sunday?
 		if current.Weekday() == time.Sunday {
@@ -166,35 +185,35 @@ func nthSundayOfMonth(t time.Time, n int) (time.Time, error) {
 		current = current.AddDate(0, 0, 1)
 	}
 
-	return t, errors.New(fmt.Sprintf("Could not find the %dth Sunday in %s", n, t.Month().String()))
+	return date, errors.New(fmt.Sprintf("Could not find the %dth Sunday in %s", n, date.Month().String()))
 
 }
 
 // Morsdag, 2nd Sunday in February
-func AtMorsdag(t time.Time) bool {
-	if t.Month() != time.February {
+func AtMorsdag(date time.Time) bool {
+	if date.Month() != time.February {
 		return false
 	}
-	nthSunday, err := nthSundayOfMonth(t, 2)
+	nthSunday, err := nthSundayOfMonth(date, 2)
 	if err != nil {
 		return false
 	}
-	if AtDate(t, nthSunday) {
+	if AtDate(date, nthSunday) {
 		return true
 	}
 	return false
 }
 
 // Farsdag, 2nd Sunday in November
-func AtFarsdag(t time.Time) bool {
-	if t.Month() != time.November {
+func AtFarsdag(date time.Time) bool {
+	if date.Month() != time.November {
 		return false
 	}
-	nthSunday, err := nthSundayOfMonth(t, 2)
+	nthSunday, err := nthSundayOfMonth(date, 2)
 	if err != nil {
 		return false
 	}
-	if AtDate(t, nthSunday) {
+	if AtDate(date, nthSunday) {
 		return true
 	}
 	return false
@@ -202,183 +221,303 @@ func AtFarsdag(t time.Time) bool {
 
 // Finds the norwegian name for a day of the week
 // Note that time.Weekday starts at 0 with Sunday, not Monday
-func NorwegianName(dayoftheweek time.Weekday) string {
+func DayName(dayoftheweek time.Weekday) string {
 	days := []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}
 	return days[int(dayoftheweek)]
 }
 
 // Dates that are not red, but not completely ordinary either
 // Some days may overlap, then a comma separated (", ") list will be returned
-// TODO: Caching
-func NotableDate(date time.Time) (bool, string) {
+// Since days may overlap, "flaggdager" must come first for the Flaggdag
+// function to work. TODO: Caching
+func NotableDate(date time.Time) (bool, string, bool) {
 
-	notable := []string{}
+	// Source: http://www.timeanddate.no/kalender/merkedag-innhold
+	// Source: http://no.wikipedia.org/wiki/Norges_offisielle_flaggdager
+
+	var (
+		descriptions []string
+		flag         bool
+	)
+
+	// --- Flag days ---
+
+	// Frigjøringsdagen
+	if AtMD(date, 5, 8) {
+		// Frigjøringsdag 1945
+		descriptions = append(descriptions, "Frigjøringsdagen")
+		flag = true
+	}
+
+	// Samefolkets dag
+	if AtMD(date, 2, 6) {
+		descriptions = append(descriptions, "Samefolkets dag")
+		flag = true
+	}
+
+	// 21 januar, H.K.H. Prinsesse Ingrid Alexandras fødselsdag
+	if AtMD(date, 1, 21) {
+		descriptions = append(descriptions, "H.K.H. Prinsesse Ingrid Alexandras fødselsdag")
+		flag = true
+	}
+
+	// 21 februar, H.M. Kong Harald Vs fødselsdag
+	if AtMD(date, 2, 21) {
+		descriptions = append(descriptions, "H.M. Kong Harald Vs fødselsdag")
+		flag = true
+	}
+
+	// 7 juni, unionsoppløsningen med Sverige i 1905
+	if AtMD(date, 6, 7) {
+		descriptions = append(descriptions, "Unionsoppløsningen med Sverige i 1905")
+		flag = true
+	}
+
+	// 4 juli, H.M. Dronning Sonjas fødselsdag
+	if AtMD(date, 7, 4) {
+		descriptions = append(descriptions, "H.M. Dronning Sonjas fødselsdag")
+		flag = true
+	}
+
+	// 20 juli, H.K.H. Kronprins Haakon Magnus' fødselsdag
+	if AtMD(date, 7, 20) {
+		descriptions = append(descriptions, "H.K.H. Kronprins Haakon Magnus' fødselsdag")
+		flag = true
+	}
+
+	// 29. juli, Olsokdagen
+	if AtMD(date, 7, 29) {
+		descriptions = append(descriptions, "Olsokdagen")
+		flag = true
+	}
+
+	// 19. aug, H.K.H. Kronprinsesse Mette Marits fødselsdag
+	if AtMD(date, 8, 19) {
+		descriptions = append(descriptions, "H.K.H. Kronprinsesse Mette Marits fødselsdag")
+		flag = true
+	}
+
+	// 9. sept hvert 4. år, 2013, 2017 osv, Stortingsvalg-dagen
+	if (date.Year()-1)%4 == 0 {
+		if AtMD(date, 9, 9) {
+			descriptions = append(descriptions, "Stortingsvalg-dagen")
+			flag = true
+		}
+	}
+
+	// --- Non-flag days ---
 
 	// Askeonsdag (fasten begynner)
 	if AtEasterPlus(date, -46) {
-		notable = append(notable, "Askeonsdag")
+		descriptions = append(descriptions, "Askeonsdag")
 	}
 
 	// Påskeaften (fasten slutter)
 	if AtEasterPlus(date, -1) {
-		notable = append(notable, "Påskeaften")
+		descriptions = append(descriptions, "Påskeaften")
 	}
 
 	// Fastelavnssøndag (første dag i fastelavn, festen før fasten)
 	// Source: http://www.aktivioslo.no/hvaskjer/fastelavn/
 	if AtEasterPlus(date, -49) {
-		notable = append(notable, "Fastelavnsøndag")
+		descriptions = append(descriptions, "Fastelavnsøndag")
 	}
 
 	// Blåmandag (andre dag i fastelavn)
 	if AtEasterPlus(date, -48) {
-		notable = append(notable, "Blåmandag")
+		descriptions = append(descriptions, "Blåmandag")
 	}
 
 	// Feitetirsdag (tredje og siste dag i fastelavn, også kjent som Mardi Gras)
 	if AtEasterPlus(date, -47) {
-		notable = append(notable, "Feitetirsdag (Mardi Gras)")
+		descriptions = append(descriptions, "Feitetirsdag (Mardi Gras)")
 	}
 
 	// Sankthansaften
-	if At(date, 6, 23) {
-		notable = append(notable, "Sankthansaften")
-	}
-
-	// Frigjøringsdagen
-	if At(date, 5, 8) {
-		notable = append(notable, "Frigjøringsdagen")
-	}
-
-	// Julaften
-	if At(date, 12, 24) {
-		notable = append(notable, "Julaften")
+	if AtMD(date, 6, 23) {
+		descriptions = append(descriptions, "Sankthansaften")
 	}
 
 	// Nyttårsaften
-	if At(date, 12, 31) {
-		notable = append(notable, "Nyttårsaften")
+	if AtMD(date, 12, 31) {
+		descriptions = append(descriptions, "Nyttårsaften")
 	}
 
 	// Morsdag
 	if AtMorsdag(date) {
-		notable = append(notable, "Morsdag")
+		descriptions = append(descriptions, "Morsdag")
 	}
 
 	// Farsdag
 	if AtFarsdag(date) {
-		notable = append(notable, "Farsdag")
+		descriptions = append(descriptions, "Farsdag")
 	}
 
 	// Valentinsdagen
-	if At(date, 2, 14) {
-		notable = append(notable, "Valentinsdagen")
+	if AtMD(date, 2, 14) {
+		descriptions = append(descriptions, "Valentinsdagen")
 	}
 
 	// Allehelgensaften (Halloween)
-	if At(date, 10, 31) {
-		notable = append(notable, "Allehelgensaften (Halloween)")
+	if AtMD(date, 10, 31) {
+		descriptions = append(descriptions, "Allehelgensaften (Halloween)")
 	}
 
 	// Allehelgensdag
-	if At(date, 11, 1) {
-		notable = append(notable, "Allehelgensdag")
+	if AtMD(date, 11, 1) {
+		descriptions = append(descriptions, "Allehelgensdag")
 	}
 
-	// Samefolkets dag
-	if At(date, 2, 6) {
-		notable = append(notable, "Samefolkets dag")
-	}
-
-	// TODO: http://www.timeanddate.no/kalender/merkedag-innhold
+	// bevegelig, vårjevndøgn
+	// siste søndag i mars, sommertid, klokka stilles 1 time frem
+	// bevegelig, sommersolverv
+	// uke 28, 29 og 30, fellesferie
+	// bevegelig, høstjevndøgn
+	// siste søndag i oktober, vintertid, klokka stilles 1 time tilbake
+	// bevegelig, vintersolverv
 
 	// If there are notable events, return them as a string
-	if len(notable) > 0 {
-		return true, strings.Join(notable, ", ")
+	if len(descriptions) > 0 {
+		return true, strings.Join(descriptions, ", "), flag
 	}
 
 	// No notable events
-	return false, ""
+	return false, "", false
+}
+
+// Returns the third boolean argument given a time.Time value and
+// a function that takes a time.Time and returns a bool, a string and a bool
+func thirdBool(date time.Time, fn func(time.Time) (bool, string, bool)) bool {
+	_, _, b := fn(date)
+	return b
+}
+
+func Describe(date time.Time) string {
+	fulldesc := ""
+	if red, desc, _ := RedDate(date); red {
+		fulldesc = desc
+	}
+	if notable, desc, _ := NotableDate(date); notable {
+		if fulldesc == "" {
+			fulldesc = desc
+		} else {
+			fulldesc += ", " + desc
+		}
+	}
+	if fulldesc != "" {
+		return fulldesc
+	}
+	// Vanlig hverdag
+	return "Hverdag"
+}
+
+// Checks if a given date is a "flaggdag" or not
+func FlagDate(date time.Time) bool {
+	return thirdBool(date, RedDate) || thirdBool(date, NotableDate)
 }
 
 // Checks if a given date is a "red day" in the Norwegian calendar
 // Returns true/false and a description
 // The dates will never overlap
+// Includes the 24th of December, even though only half the day is off
 // TODO: Caching
-func RedDate(date time.Time) (bool, string) {
+func RedDate(date time.Time) (bool, string, bool) {
 	// Source: http://www.diskusjon.no/index.php?showtopic=1084239
 	// Source: http://no.wikipedia.org/wiki/Helligdager_i_Norge
 
+	var (
+		desc string
+		flag bool
+	)
+
+	// Sundays
+	if date.Weekday() == 0 {
+		desc = "Søndag"
+	}
+
 	// Første nyttårsdag, 1. januar
-	if At(date, 1, 1) {
-		return true, "Første nyttårsdag"
+	if AtMD(date, 1, 1) {
+		desc = "Første nyttårsdag"
+		flag = true
 	}
 
 	// Palmesøndag
-	if AtPalmesøndag(date) {
-		return true, "Palmesøndag"
+	if AtPalmSunday(date) {
+		desc = "Palmesøndag"
 	}
 
 	// Skjærtorsdag (easter - 3d)
 	if AtEasterPlus(date, -3) {
-		return true, "Skjærtorsdag"
+		desc = "Skjærtorsdag"
 	}
 
 	// Langfredag (easter - 2d)
 	if AtEasterPlus(date, -2) {
-		return true, "Langfredag"
+		desc = "Langfredag"
 	}
 
 	// Første påskedag
 	if AtEasterPlus(date, 0) {
-		return true, "Første påskedag"
+		desc = "Første påskedag"
+		flag = true
 	}
 
 	// Andre påskedag (easter + 1d)
 	if AtEasterPlus(date, 1) {
-		return true, "Andre påskedag"
+		desc = "Andre påskedag"
 	}
 
 	// Arbeidernes internasjonale kampdag, 1. mai
-	if At(date, 5, 1) {
-		return true, "Arbeidernes internasjonale kampdag"
+	if AtMD(date, 5, 1) {
+		// Arbeiderbevegelsens dag
+		desc = "Arbeidernes internasjonale kampdag"
+		flag = true
 	}
 
 	// Grunnlovsdagen, 17. mai
-	if At(date, 5, 17) {
-		return true, "Grunnlovsdagen"
+	if AtMD(date, 5, 17) {
+		// Norges grunnlovsdag/nasjonaldagen
+		desc = "Grunnlovsdagen"
+		flag = true
 	}
 
 	// Kristi himmelfartsdag (40. påskedag: easter + 39d)
 	if AtEasterPlus(date, 39) {
-		return true, "Kristi himmelfartsdag"
+		desc = "Kristi himmelfartsdag"
 	}
 
 	// Første pinsedag (50. påskedag: easter + 49d)
 	if AtEasterPlus(date, 49) {
-		return true, "Første pinsedag"
+		desc = "Første pinsedag"
+		flag = true
 	}
 
 	// Andre pinsedag (51. påskedag: easter + 50d)
 	if AtEasterPlus(date, 50) {
-		return true, "Andre pinsedag"
+		desc = "Andre pinsedag"
+	}
+
+	// Julaften, halv-rød dag!
+	if AtMD(date, 12, 24) {
+		desc = "Julaften (halv dag)"
 	}
 
 	// Første juledag (25. desember)
-	if At(date, 12, 25) {
-		return true, "Første juledag"
+	if AtMD(date, 12, 25) {
+		desc = "Første juledag"
+		flag = true
 	}
 
 	// Andre juledag (26. desember)
-	if At(date, 12, 26) {
-		return true, "Andre juledag"
+	if AtMD(date, 12, 26) {
+		desc = "Andre juledag"
 	}
 
-	// Sundays
-	if date.Weekday() == 0 {
-		return true, "Søndag"
+	// Red days
+	if desc != "" {
+		return true, desc, flag
 	}
 
 	// Normal days
-	return false, ""
+	return false, desc, false
 }
