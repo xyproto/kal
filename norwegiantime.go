@@ -212,13 +212,6 @@ func atFarsdag(date time.Time) bool {
 	return false
 }
 
-// Finds the norwegian name for a day of the week.
-// Note that time.Weekday starts at 0 with Sunday, not Monday.
-func DayName(dayoftheweek time.Weekday) string {
-	days := []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}
-	return days[int(dayoftheweek)]
-}
-
 // Dates that are not red, but not completely ordinary either. Some days may
 // overlap, in which case a comma separated (", ") list will be returned.
 func NotableDay(date time.Time) (bool, string, bool) {
@@ -521,4 +514,11 @@ func RedDay(date time.Time) (bool, string, bool) {
 
 	// Normal days
 	return false, desc, false
+}
+
+// Finds the norwegian name for a day of the week.
+// Note that time.Weekday starts at 0 with Sunday, not Monday.
+func DayName(day time.Weekday) string {
+	days := []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}
+	return days[int(day)]
 }
