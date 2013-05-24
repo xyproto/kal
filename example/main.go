@@ -14,7 +14,7 @@ func notable(year int) {
 	// As long as we are in the same year
 	for current.Year() == year {
 
-		if notable, desc, flag := norwegiantime.NotableDate(current); notable {
+		if notable, desc, flag := norwegiantime.NotableDay(current); notable {
 			fmt.Printf("%s %d is at %s (flag: %v)\n", desc, year, current.String()[:10], flag)
 		}
 
@@ -32,7 +32,7 @@ func flag(year int) {
 	// As long as we are in the same year
 	for current.Year() == year {
 
-		if flag := norwegiantime.FlagDate(current); flag {
+		if flag := norwegiantime.FlagDay(current); flag {
 			fmt.Printf("%s (%s) is a flaggdag\n", norwegiantime.Describe(current), current.String()[:10])
 		}
 
@@ -53,13 +53,13 @@ func datebonanza(year int, month time.Month) {
 	// As long as we are in the same month
 	for current.Month() == month {
 
-		if red, desc, flag := norwegiantime.RedDate(current); red {
+		if red, desc, flag := norwegiantime.RedDay(current); red {
 			fmt.Printf("%s is red: %s (flag: %v)\n", current.String()[:10], desc, flag)
 			//} else {
 			//	fmt.Printf("%s\n", current.String()[:10])
 		}
 
-		if notable, desc, flag := norwegiantime.NotableDate(current); notable {
+		if notable, desc, flag := norwegiantime.NotableDay(current); notable {
 			fmt.Printf("%s is notable: %s (flag: %v)\n", current.String()[:10], desc, flag)
 			//} else {
 			//	fmt.Printf("%s\n", current.String()[:10])

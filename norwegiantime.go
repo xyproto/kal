@@ -55,7 +55,7 @@ func easterDayGauss(year int) (month, day int, err error) {
 	return month, day, nil
 }
 
-// Finds the easter day (Første påskedag) for a given year
+// Returns the easter day (Første påskedag) for a given year
 func EasterDate(year int) time.Time {
 	month, day := easterDay(year)
 	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
@@ -106,12 +106,6 @@ func sundaysInPeriod(date time.Time, days int) int {
 		}
 	}
 	return sundayCounter
-}
-
-// Checks if the given year, month and day is a "red" in the Norwegian calendar.
-// Returns true/false, a description and true/false for if it's a flag day.
-func redDay(year int, month time.Month, day int) (bool, string, bool) {
-	return RedDate(time.Date(year, month, day, 0, 0, 0, 0, time.UTC))
 }
 
 // Find a preceeding sunday
@@ -227,7 +221,7 @@ func DayName(dayoftheweek time.Weekday) string {
 
 // Dates that are not red, but not completely ordinary either. Some days may
 // overlap, in which case a comma separated (", ") list will be returned.
-func NotableDate(date time.Time) (bool, string, bool) {
+func NotableDay(date time.Time) (bool, string, bool) {
 
 	// TODO: Caching
 
@@ -399,10 +393,10 @@ func thirdBool(date time.Time, fn func(time.Time) (bool, string, bool)) bool {
 // Describe what type of day a given date is, in Norwegian.
 func Describe(date time.Time) string {
 	fulldesc := ""
-	if red, desc, _ := RedDate(date); red {
+	if red, desc, _ := RedDay(date); red {
 		fulldesc = desc
 	}
-	if notable, desc, _ := NotableDate(date); notable {
+	if notable, desc, _ := NotableDay(date); notable {
 		if fulldesc == "" {
 			fulldesc = desc
 		} else {
@@ -416,16 +410,16 @@ func Describe(date time.Time) string {
 	return "Hverdag"
 }
 
-// Checks if a given date is a "flaggdag" or not
-func FlagDate(date time.Time) bool {
-	return thirdBool(date, RedDate) || thirdBool(date, NotableDate)
+// Checks if a given date is a flying flag day or not
+func FlagDay(date time.Time) bool {
+	return thirdBool(date, RedDay) || thirdBool(date, NotableDay)
 }
 
 // Checks if a given date is a "red day" in the Norwegian calendar.
 // Returns true/false, a description and true/false for if it's a flag day.
 // The dates will never overlap.
 // Includes the 24th of December, even though only half the day is off.
-func RedDate(date time.Time) (bool, string, bool) {
+func RedDay(date time.Time) (bool, string, bool) {
 
 	// TODO: Caching
 
