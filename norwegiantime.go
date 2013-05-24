@@ -185,19 +185,19 @@ func atFarsdag(date time.Time) bool {
 	return false
 }
 
-// Returns the easter day (Første påskedag) for a given year
-func EasterDay(year int) time.Time {
-	month, day := easterDaySpencerJones(year)
-	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
-}
-
 // Checks if a day is at easter day +- a few days
-func AtEasterPlus(date time.Time, days int) bool {
+func atEasterPlus(date time.Time, days int) bool {
 	year := date.Year()
 	eastermonth, easterday := easterDaySpencerJones(year)
 	easter := time.Date(year, time.Month(eastermonth), easterday, 0, 0, 0, 0, time.UTC)
 	when := easter.AddDate(0, 0, days)
 	return atDate(date, when)
+}
+
+// Returns the easter day (Første påskedag) for a given year
+func EasterDay(year int) time.Time {
+	month, day := easterDaySpencerJones(year)
+	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 }
 
 // Finds the norwegian name for a day of the week.
@@ -246,23 +246,23 @@ func RedDay(date time.Time) (bool, string, bool) {
 	}
 
 	// Skjærtorsdag (easter - 3d)
-	if AtEasterPlus(date, -3) {
+	if atEasterPlus(date, -3) {
 		desc = "Skjærtorsdag"
 	}
 
 	// Langfredag (easter - 2d)
-	if AtEasterPlus(date, -2) {
+	if atEasterPlus(date, -2) {
 		desc = "Langfredag"
 	}
 
 	// Første påskedag
-	if AtEasterPlus(date, 0) {
+	if atEasterPlus(date, 0) {
 		desc = "Første påskedag"
 		flag = true
 	}
 
 	// Andre påskedag (easter + 1d)
-	if AtEasterPlus(date, 1) {
+	if atEasterPlus(date, 1) {
 		desc = "Andre påskedag"
 	}
 
@@ -281,18 +281,18 @@ func RedDay(date time.Time) (bool, string, bool) {
 	}
 
 	// Kristi himmelfartsdag (40. påskedag: easter + 39d)
-	if AtEasterPlus(date, 39) {
+	if atEasterPlus(date, 39) {
 		desc = "Kristi himmelfartsdag"
 	}
 
 	// Første pinsedag (50. påskedag: easter + 49d)
-	if AtEasterPlus(date, 49) {
+	if atEasterPlus(date, 49) {
 		desc = "Første pinsedag"
 		flag = true
 	}
 
 	// Andre pinsedag (51. påskedag: easter + 50d)
-	if AtEasterPlus(date, 50) {
+	if atEasterPlus(date, 50) {
 		desc = "Andre pinsedag"
 	}
 
@@ -406,28 +406,28 @@ func NotableDay(date time.Time) (bool, string, bool) {
 	// --- Non-flag days ---
 
 	// Askeonsdag (fasten begynner)
-	if AtEasterPlus(date, -46) {
+	if atEasterPlus(date, -46) {
 		descriptions = append(descriptions, "Askeonsdag")
 	}
 
 	// Påskeaften (fasten slutter)
-	if AtEasterPlus(date, -1) {
+	if atEasterPlus(date, -1) {
 		descriptions = append(descriptions, "Påskeaften")
 	}
 
 	// Fastelavnssøndag (første dag i fastelavn, festen før fasten)
 	// Source: http://www.aktivioslo.no/hvaskjer/fastelavn/
-	if AtEasterPlus(date, -49) {
+	if atEasterPlus(date, -49) {
 		descriptions = append(descriptions, "Fastelavnsøndag")
 	}
 
 	// Blåmandag (andre dag i fastelavn)
-	if AtEasterPlus(date, -48) {
+	if atEasterPlus(date, -48) {
 		descriptions = append(descriptions, "Blåmandag")
 	}
 
 	// Feitetirsdag (tredje og siste dag i fastelavn, også kjent som Mardi Gras)
-	if AtEasterPlus(date, -47) {
+	if atEasterPlus(date, -47) {
 		descriptions = append(descriptions, "Feitetirsdag (Mardi Gras)")
 	}
 
