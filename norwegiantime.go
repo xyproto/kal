@@ -55,35 +55,35 @@ func easterDayGauss(year int) (month, day int, err error) {
 	return month, day, nil
 }
 
-// Finds the easter day for a given year
+// Finds the easter day (Første påskedag) for a given year
 func EasterDate(year int) time.Time {
 	month, day := easterDay(year)
 	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 }
 
-// Checks if the given time is easter day
-func IsEaster(date time.Time) bool {
+// Checks if the given time is easter day (Første påskedag)
+func isEaster(date time.Time) bool {
 	eastermonth, easterday := easterDay(date.Year())
 	return (date.Month() == time.Month(eastermonth)) && (date.Day() == easterday)
 }
 
 // Checks if the given time is at the given month and day
-func AtMD(date time.Time, month, day int) bool {
+func atMD(date time.Time, month, day int) bool {
 	return (date.Month() == time.Month(month)) && (date.Day() == day)
 }
 
 // Checks if the two given times are at the same months and days
-func AtDate(t, when time.Time) bool {
+func atDate(t, when time.Time) bool {
 	return (t.Month() == when.Month()) && (t.Day() == when.Day())
 }
 
 // Checks if a day is at easterday +- a few days
-func AtEasterPlus(date time.Time, days int) bool {
+func atEasterPlus(date time.Time, days int) bool {
 	year := date.Year()
 	eastermonth, easterday := easterDay(year)
 	easter := time.Date(year, time.Month(eastermonth), easterday, 0, 0, 0, 0, time.UTC)
 	when := easter.AddDate(0, 0, days)
-	return AtDate(date, when)
+	return atDate(date, when)
 }
 
 // Return the number of sundays from day t, +- a few days
@@ -108,8 +108,8 @@ func sundaysInPeriod(date time.Time, days int) int {
 	return sundayCounter
 }
 
-// Checks if the given year, month and day is a "red" in the Norwegian calendar
-// Returns true/false, a description and true/false for if it's a flag day
+// Checks if the given year, month and day is a "red" in the Norwegian calendar.
+// Returns true/false, a description and true/false for if it's a flag day.
 func RedDay(year int, month time.Month, day int) (bool, string, bool) {
 	return RedDate(time.Date(year, month, day, 0, 0, 0, 0, time.UTC))
 }
@@ -137,21 +137,20 @@ func searchBackwardsForSunday(date time.Time) (time.Time, error) {
 }
 
 // Get the week number, from 1 to 53
-func Week(date time.Time) int {
+func WeekNum(date time.Time) int {
 	_, weeknum := date.ISOWeek()
 	return weeknum
 }
 
-// Checks if the given date is at Palmesøndag
-// Palmesøndag is the Sunday before easter (Første Påskedag)
-func AtPalmSunday(date time.Time) bool {
+// Checks if the given date is at Palmesøndag (the Sunday before easter)
+func atPalmSunday(date time.Time) bool {
 	easter := EasterDate(date.Year())
 	palmSunday, err := searchBackwardsForSunday(easter)
 	if err != nil {
 		// This should not happen, there should always be a sunday before easter for any given year
 		return false
 	}
-	return AtDate(date, palmSunday)
+	return atDate(date, palmSunday)
 }
 
 // Find the Nth sunday of a given year and month
@@ -190,7 +189,7 @@ func nthSundayOfMonth(date time.Time, n int) (time.Time, error) {
 }
 
 // Morsdag, 2nd Sunday in February
-func AtMorsdag(date time.Time) bool {
+func atMorsdag(date time.Time) bool {
 	if date.Month() != time.February {
 		return false
 	}
@@ -198,14 +197,14 @@ func AtMorsdag(date time.Time) bool {
 	if err != nil {
 		return false
 	}
-	if AtDate(date, nthSunday) {
+	if atDate(date, nthSunday) {
 		return true
 	}
 	return false
 }
 
 // Farsdag, 2nd Sunday in November
-func AtFarsdag(date time.Time) bool {
+func atFarsdag(date time.Time) bool {
 	if date.Month() != time.November {
 		return false
 	}
@@ -213,7 +212,7 @@ func AtFarsdag(date time.Time) bool {
 	if err != nil {
 		return false
 	}
-	if AtDate(date, nthSunday) {
+	if atDate(date, nthSunday) {
 		return true
 	}
 	return false
@@ -243,63 +242,63 @@ func NotableDate(date time.Time) (bool, string, bool) {
 	// --- Flag days ---
 
 	// Frigjøringsdagen
-	if AtMD(date, 5, 8) {
+	if atMD(date, 5, 8) {
 		// Frigjøringsdag 1945
 		descriptions = append(descriptions, "Frigjøringsdagen")
 		flag = true
 	}
 
 	// Samefolkets dag
-	if AtMD(date, 2, 6) {
+	if atMD(date, 2, 6) {
 		descriptions = append(descriptions, "Samefolkets dag")
 		flag = true
 	}
 
 	// 21 januar, H.K.H. Prinsesse Ingrid Alexandras fødselsdag
-	if AtMD(date, 1, 21) {
+	if atMD(date, 1, 21) {
 		descriptions = append(descriptions, "H.K.H. Prinsesse Ingrid Alexandras fødselsdag")
 		flag = true
 	}
 
 	// 21 februar, H.M. Kong Harald Vs fødselsdag
-	if AtMD(date, 2, 21) {
+	if atMD(date, 2, 21) {
 		descriptions = append(descriptions, "H.M. Kong Harald Vs fødselsdag")
 		flag = true
 	}
 
 	// 7 juni, unionsoppløsningen med Sverige i 1905
-	if AtMD(date, 6, 7) {
+	if atMD(date, 6, 7) {
 		descriptions = append(descriptions, "Unionsoppløsningen med Sverige i 1905")
 		flag = true
 	}
 
 	// 4 juli, H.M. Dronning Sonjas fødselsdag
-	if AtMD(date, 7, 4) {
+	if atMD(date, 7, 4) {
 		descriptions = append(descriptions, "H.M. Dronning Sonjas fødselsdag")
 		flag = true
 	}
 
 	// 20 juli, H.K.H. Kronprins Haakon Magnus' fødselsdag
-	if AtMD(date, 7, 20) {
+	if atMD(date, 7, 20) {
 		descriptions = append(descriptions, "H.K.H. Kronprins Haakon Magnus' fødselsdag")
 		flag = true
 	}
 
 	// 29. juli, Olsokdagen
-	if AtMD(date, 7, 29) {
+	if atMD(date, 7, 29) {
 		descriptions = append(descriptions, "Olsokdagen")
 		flag = true
 	}
 
 	// 19. aug, H.K.H. Kronprinsesse Mette Marits fødselsdag
-	if AtMD(date, 8, 19) {
+	if atMD(date, 8, 19) {
 		descriptions = append(descriptions, "H.K.H. Kronprinsesse Mette Marits fødselsdag")
 		flag = true
 	}
 
 	// 9. sept hvert 4. år, 2013, 2017 osv, Stortingsvalg-dagen
 	if (date.Year()-1)%4 == 0 {
-		if AtMD(date, 9, 9) {
+		if atMD(date, 9, 9) {
 			descriptions = append(descriptions, "Stortingsvalg-dagen")
 			flag = true
 		}
@@ -308,63 +307,63 @@ func NotableDate(date time.Time) (bool, string, bool) {
 	// --- Non-flag days ---
 
 	// Askeonsdag (fasten begynner)
-	if AtEasterPlus(date, -46) {
+	if atEasterPlus(date, -46) {
 		descriptions = append(descriptions, "Askeonsdag")
 	}
 
 	// Påskeaften (fasten slutter)
-	if AtEasterPlus(date, -1) {
+	if atEasterPlus(date, -1) {
 		descriptions = append(descriptions, "Påskeaften")
 	}
 
 	// Fastelavnssøndag (første dag i fastelavn, festen før fasten)
 	// Source: http://www.aktivioslo.no/hvaskjer/fastelavn/
-	if AtEasterPlus(date, -49) {
+	if atEasterPlus(date, -49) {
 		descriptions = append(descriptions, "Fastelavnsøndag")
 	}
 
 	// Blåmandag (andre dag i fastelavn)
-	if AtEasterPlus(date, -48) {
+	if atEasterPlus(date, -48) {
 		descriptions = append(descriptions, "Blåmandag")
 	}
 
 	// Feitetirsdag (tredje og siste dag i fastelavn, også kjent som Mardi Gras)
-	if AtEasterPlus(date, -47) {
+	if atEasterPlus(date, -47) {
 		descriptions = append(descriptions, "Feitetirsdag (Mardi Gras)")
 	}
 
 	// Sankthansaften
-	if AtMD(date, 6, 23) {
+	if atMD(date, 6, 23) {
 		descriptions = append(descriptions, "Sankthansaften")
 	}
 
 	// Nyttårsaften
-	if AtMD(date, 12, 31) {
+	if atMD(date, 12, 31) {
 		descriptions = append(descriptions, "Nyttårsaften")
 	}
 
 	// Morsdag
-	if AtMorsdag(date) {
+	if atMorsdag(date) {
 		descriptions = append(descriptions, "Morsdag")
 	}
 
 	// Farsdag
-	if AtFarsdag(date) {
+	if atFarsdag(date) {
 		descriptions = append(descriptions, "Farsdag")
 	}
 
 	// Valentinsdagen
-	if AtMD(date, 2, 14) {
+	if atMD(date, 2, 14) {
 		descriptions = append(descriptions, "Valentinsdagen")
 	}
 
 	// Allehelgensaften (Halloween)
-	if AtMD(date, 10, 31) {
+	if atMD(date, 10, 31) {
 		descriptions = append(descriptions, "Allehelgensaften (Halloween)")
 	}
 
 	// Allehelgensdag
-	if AtMD(date, 11, 1) {
+	if atMD(date, 11, 1) {
 		descriptions = append(descriptions, "Allehelgensdag")
 	}
 
@@ -438,80 +437,80 @@ func RedDate(date time.Time) (bool, string, bool) {
 	}
 
 	// Første nyttårsdag, 1. januar
-	if AtMD(date, 1, 1) {
+	if atMD(date, 1, 1) {
 		desc = "Første nyttårsdag"
 		flag = true
 	}
 
 	// Palmesøndag
-	if AtPalmSunday(date) {
+	if atPalmSunday(date) {
 		desc = "Palmesøndag"
 	}
 
 	// Skjærtorsdag (easter - 3d)
-	if AtEasterPlus(date, -3) {
+	if atEasterPlus(date, -3) {
 		desc = "Skjærtorsdag"
 	}
 
 	// Langfredag (easter - 2d)
-	if AtEasterPlus(date, -2) {
+	if atEasterPlus(date, -2) {
 		desc = "Langfredag"
 	}
 
 	// Første påskedag
-	if AtEasterPlus(date, 0) {
+	if atEasterPlus(date, 0) {
 		desc = "Første påskedag"
 		flag = true
 	}
 
 	// Andre påskedag (easter + 1d)
-	if AtEasterPlus(date, 1) {
+	if atEasterPlus(date, 1) {
 		desc = "Andre påskedag"
 	}
 
 	// Arbeidernes internasjonale kampdag, 1. mai
-	if AtMD(date, 5, 1) {
+	if atMD(date, 5, 1) {
 		// Arbeiderbevegelsens dag
 		desc = "Arbeidernes internasjonale kampdag"
 		flag = true
 	}
 
 	// Grunnlovsdagen, 17. mai
-	if AtMD(date, 5, 17) {
+	if atMD(date, 5, 17) {
 		// Norges grunnlovsdag/nasjonaldagen
 		desc = "Grunnlovsdagen"
 		flag = true
 	}
 
 	// Kristi himmelfartsdag (40. påskedag: easter + 39d)
-	if AtEasterPlus(date, 39) {
+	if atEasterPlus(date, 39) {
 		desc = "Kristi himmelfartsdag"
 	}
 
 	// Første pinsedag (50. påskedag: easter + 49d)
-	if AtEasterPlus(date, 49) {
+	if atEasterPlus(date, 49) {
 		desc = "Første pinsedag"
 		flag = true
 	}
 
 	// Andre pinsedag (51. påskedag: easter + 50d)
-	if AtEasterPlus(date, 50) {
+	if atEasterPlus(date, 50) {
 		desc = "Andre pinsedag"
 	}
 
 	// Julaften, halv-rød dag!
-	if AtMD(date, 12, 24) {
+	if atMD(date, 12, 24) {
 		desc = "Julaften (halv dag)"
 	}
 
 	// Første juledag (25. desember)
-	if AtMD(date, 12, 25) {
+	if atMD(date, 12, 25) {
 		desc = "Første juledag"
 		flag = true
 	}
 
 	// Andre juledag (26. desember)
-	if AtMD(date, 12, 26) {
+	if atMD(date, 12, 26) {
 		desc = "Andre juledag"
 	}
 
