@@ -218,18 +218,18 @@ func atFarsdag(date time.Time) bool {
 	return false
 }
 
-// Finds the norwegian name for a day of the week
-// Note that time.Weekday starts at 0 with Sunday, not Monday
+// Finds the norwegian name for a day of the week.
+// Note that time.Weekday starts at 0 with Sunday, not Monday.
 func DayName(dayoftheweek time.Weekday) string {
 	days := []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}
 	return days[int(dayoftheweek)]
 }
 
-// Dates that are not red, but not completely ordinary either
-// Some days may overlap, then a comma separated (", ") list will be returned
-// Since days may overlap, "flaggdager" must come first for the Flaggdag
-// function to work. TODO: Caching
+// Dates that are not red, but not completely ordinary either. Some days may 
+// overlap, in which case a comma separated (", ") list will be returned.
 func NotableDate(date time.Time) (bool, string, bool) {
+
+	// TODO: Caching
 
 	// Source: http://www.timeanddate.no/kalender/merkedag-innhold
 	// Source: http://no.wikipedia.org/wiki/Norges_offisielle_flaggdager
@@ -238,6 +238,9 @@ func NotableDate(date time.Time) (bool, string, bool) {
 		descriptions []string
 		flag         bool
 	)
+
+	// Since days may overlap, "flaggdager" must come first for the flag
+	// flying days to be correct.
 
 	// --- Flag days ---
 
