@@ -8,7 +8,7 @@ import (
 )
 
 // Spencer Jones' formula from 1922
-func easterDay(year int) (month, day int) {
+func easterDaySpencerJones(year int) (month, day int) {
 	// Source: http://no.wikipedia.org/wiki/Påskeformelen
 	a := year % 19
 	b := year / 100
@@ -56,14 +56,14 @@ func easterDayGauss(year int) (month, day int, err error) {
 }
 
 // Returns the easter day (Første påskedag) for a given year
-func EasterDate(year int) time.Time {
-	month, day := easterDay(year)
+func EasterDay(year int) time.Time {
+	month, day := easterDaySpencerJones(year)
 	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 }
 
 // Checks if the given time is easter day (Første påskedag)
 func isEaster(date time.Time) bool {
-	eastermonth, easterday := easterDay(date.Year())
+	eastermonth, easterday := easterDaySpencerJones(date.Year())
 	return (date.Month() == time.Month(eastermonth)) && (date.Day() == easterday)
 }
 
@@ -80,7 +80,7 @@ func atDate(t, when time.Time) bool {
 // Checks if a day is at easterday +- a few days
 func atEasterPlus(date time.Time, days int) bool {
 	year := date.Year()
-	eastermonth, easterday := easterDay(year)
+	eastermonth, easterday := easterDaySpencerJones(year)
 	easter := time.Date(year, time.Month(eastermonth), easterday, 0, 0, 0, 0, time.UTC)
 	when := easter.AddDate(0, 0, days)
 	return atDate(date, when)
@@ -138,7 +138,7 @@ func WeekNum(date time.Time) int {
 
 // Checks if the given date is at Palmesøndag (the Sunday before easter)
 func atPalmSunday(date time.Time) bool {
-	easter := EasterDate(date.Year())
+	easter := EasterDay(date.Year())
 	palmSunday, err := searchBackwardsForSunday(easter)
 	if err != nil {
 		// This should not happen, there should always be a sunday before easter for any given year

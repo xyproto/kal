@@ -76,7 +76,7 @@ func main() {
 	year := 2013
 
 	// When is easter this year?
-	easter := norwegiantime.EasterDate(year)
+	easter := norwegiantime.EasterDay(year)
 	fmt.Printf("Easter %d is at %s\n", year, easter.String()[:10])
 
 	// Show some info for March this year
