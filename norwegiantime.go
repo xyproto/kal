@@ -368,6 +368,8 @@ func NotableDate(date time.Time) (bool, string, bool) {
 		descriptions = append(descriptions, "Allehelgensdag")
 	}
 
+	// TODO: Implement these:
+	//
 	// bevegelig, vårjevndøgn
 	// siste søndag i mars, sommertid, klokka stilles 1 time frem
 	// bevegelig, sommersolverv
