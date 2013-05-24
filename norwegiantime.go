@@ -321,8 +321,11 @@ func RedDay(date time.Time) (bool, string, bool) {
 	return false, desc, false
 }
 
-// Dates that are not red, but not completely ordinary either. Some days may
-// overlap, in which case a comma separated (", ") list will be returned.
+// Some days are not red, but special in one way or another.
+// Checks if a given date is notable. Returns true/false if the
+// given date is notable, a comma separated description (in case there are more
+// than one notable event that day) and true/false depending on if it's a flag
+// flying day or not.
 func NotableDay(date time.Time) (bool, string, bool) {
 
 	// TODO: Caching
