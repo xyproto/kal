@@ -110,7 +110,7 @@ func sundaysInPeriod(date time.Time, days int) int {
 
 // Checks if the given year, month and day is a "red" in the Norwegian calendar.
 // Returns true/false, a description and true/false for if it's a flag day.
-func RedDay(year int, month time.Month, day int) (bool, string, bool) {
+func redDay(year int, month time.Month, day int) (bool, string, bool) {
 	return RedDate(time.Date(year, month, day, 0, 0, 0, 0, time.UTC))
 }
 
@@ -422,7 +422,7 @@ func FlagDate(date time.Time) bool {
 }
 
 // Checks if a given date is a "red day" in the Norwegian calendar.
-// Returns true/false and a description.
+// Returns true/false, a description and true/false for if it's a flag day.
 // The dates will never overlap.
 // Includes the 24th of December, even though only half the day is off.
 func RedDate(date time.Time) (bool, string, bool) {
