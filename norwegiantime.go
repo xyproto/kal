@@ -225,7 +225,7 @@ func DayName(dayoftheweek time.Weekday) string {
 	return days[int(dayoftheweek)]
 }
 
-// Dates that are not red, but not completely ordinary either. Some days may 
+// Dates that are not red, but not completely ordinary either. Some days may
 // overlap, in which case a comma separated (", ") list will be returned.
 func NotableDate(date time.Time) (bool, string, bool) {
 
@@ -396,6 +396,7 @@ func thirdBool(date time.Time, fn func(time.Time) (bool, string, bool)) bool {
 	return b
 }
 
+// Describe what type of day a given date is, in Norwegian.
 func Describe(date time.Time) string {
 	fulldesc := ""
 	if red, desc, _ := RedDate(date); red {
@@ -420,12 +421,14 @@ func FlagDate(date time.Time) bool {
 	return thirdBool(date, RedDate) || thirdBool(date, NotableDate)
 }
 
-// Checks if a given date is a "red day" in the Norwegian calendar
-// Returns true/false and a description
-// The dates will never overlap
-// Includes the 24th of December, even though only half the day is off
-// TODO: Caching
+// Checks if a given date is a "red day" in the Norwegian calendar.
+// Returns true/false and a description.
+// The dates will never overlap.
+// Includes the 24th of December, even though only half the day is off.
 func RedDate(date time.Time) (bool, string, bool) {
+
+	// TODO: Caching
+
 	// Source: http://www.diskusjon.no/index.php?showtopic=1084239
 	// Source: http://no.wikipedia.org/wiki/Helligdager_i_Norge
 
