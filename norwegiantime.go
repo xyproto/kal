@@ -200,7 +200,7 @@ func EasterDay(year int) time.Time {
 	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 }
 
-// Finds the norwegian name for a day of the week.
+// Finds the Norwegian name for a day of the week.
 // Note that time.Weekday starts at 0 with Sunday, not Monday.
 func DayName(day time.Weekday) string {
 	days := []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}
