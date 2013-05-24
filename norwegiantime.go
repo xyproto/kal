@@ -216,7 +216,7 @@ func WeekNum(date time.Time) int {
 // Checks if a given date is a "red day" in the Norwegian calendar.
 // Returns true/false, a description and true/false for if it's a flag day.
 // The dates will never overlap.
-// Includes the 24th of December, even though only half the day is off.
+// Includes the 24th of December, even though only half the day is red.
 func RedDay(date time.Time) (bool, string, bool) {
 
 	// TODO: Caching
