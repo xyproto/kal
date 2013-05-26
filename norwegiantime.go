@@ -7,6 +7,13 @@ import (
 	"time"
 )
 
+// Caching, for speedier execution
+var (
+	cacheRed     map[time.Time]string // red day description
+	cacheNotable map[time.Time]string // notable day description
+	cacheFlag    map[time.Time]bool   // flag flying day
+)
+
 // Spencer Jones' formula from 1922
 func easterDaySpencerJones(year int) (month, day int) {
 	// Source: http://no.wikipedia.org/wiki/Påskeformelen
@@ -219,8 +226,6 @@ func WeekNum(date time.Time) int {
 // Includes the 24th of December, even though only half the day is red.
 func RedDay(date time.Time) (bool, string, bool) {
 
-	// TODO: Caching
-
 	// Source: http://www.diskusjon.no/index.php?showtopic=1084239
 	// Source: http://no.wikipedia.org/wiki/Helligdager_i_Norge
 
@@ -228,6 +233,12 @@ func RedDay(date time.Time) (bool, string, bool) {
 		desc string
 		flag bool
 	)
+
+	// Return from cache, if it's there
+	desc, ok := cacheRed[date]
+	if ok {
+		return ok, desc, cacheFlag[date]
+	}
 
 	// Sundays
 	if date.Weekday() == 0 {
@@ -314,6 +325,17 @@ func RedDay(date time.Time) (bool, string, bool) {
 
 	// Red days
 	if desc != "" {
+		// Initialize cache, if needed
+		if cacheRed == nil {
+			cacheRed = make(map[time.Time]string)
+			if cacheFlag == nil {
+				cacheFlag = make(map[time.Time]bool)
+			}
+		}
+		// Add to cache
+		cacheRed[date] = desc
+		cacheFlag[date] = flag
+		// Then return
 		return true, desc, flag
 	}
 
@@ -328,8 +350,6 @@ func RedDay(date time.Time) (bool, string, bool) {
 // flying day or not.
 func NotableDay(date time.Time) (bool, string, bool) {
 
-	// TODO: Caching
-
 	// Source: http://www.timeanddate.no/kalender/merkedag-innhold
 	// Source: http://no.wikipedia.org/wiki/Norges_offisielle_flaggdager
 
@@ -337,6 +357,12 @@ func NotableDay(date time.Time) (bool, string, bool) {
 		descriptions []string
 		flag         bool
 	)
+
+	// Return from cache, if it's there
+	desc, ok := cacheNotable[date]
+	if ok {
+		return ok, desc, cacheFlag[date]
+	}
 
 	// Since days may overlap, "flaggdager" must come first for the flag
 	// flying days to be correct.
@@ -481,7 +507,19 @@ func NotableDay(date time.Time) (bool, string, bool) {
 
 	// If there are notable events, return them as a string
 	if len(descriptions) > 0 {
-		return true, strings.Join(descriptions, ", "), flag
+		desc := strings.Join(descriptions, ", ")
+		// Initialize cache, if needed
+		if cacheNotable == nil {
+			cacheNotable = make(map[time.Time]string)
+			if cacheFlag == nil {
+				cacheFlag = make(map[time.Time]bool)
+			}
+		}
+		// Add to cache
+		cacheNotable[date] = desc
+		cacheFlag[date] = flag
+		// Then return
+		return true, desc, flag
 	}
 
 	// No notable events
