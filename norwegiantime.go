@@ -208,6 +208,22 @@ func atNorthernSolstice(date time.Time) bool {
 	return atDate(date, northernSolstice(date.Year()))
 }
 
+// Høstjevndøgn
+func atSouthwardEquinox(date time.Time) bool {
+	if date.Month() != time.September {
+		return false
+	}
+	return atDate(date, southwardEquinox(date.Year()))
+}
+
+// Vintersolverv
+func atSouthernSolstice(date time.Time) bool {
+	if date.Month() != time.December {
+		return false
+	}
+	return atDate(date, southernSolstice(date.Year()))
+}
+
 // Checks if a day is at easter day +- a few days
 func atEasterPlus(date time.Time, days int) bool {
 	year := date.Year()
@@ -514,6 +530,21 @@ func NotableDay(date time.Time) (bool, string, bool) {
 	// Vårjevndøgn
 	if atNorthwardEquinox(date) {
 		descriptions = append(descriptions, "Vårjevndøgn")
+	}
+
+	// Sommersolverv
+	if atNorthernSolstice(date) {
+		descriptions = append(descriptions, "Sommersolverv")
+	}
+
+	// Høstjevndøgn
+	if atSouthwardEquinox(date) {
+		descriptions = append(descriptions, "Høstjevndøgn")
+	}
+
+	// Vintersolverv
+	if atSouthernSolstice(date) {
+		descriptions = append(descriptions, "Vintersolverv")
 	}
 
 	// TODO: Implement these:

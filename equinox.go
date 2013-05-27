@@ -123,6 +123,7 @@ func southernSolstice(year int) time.Time {
 	return calculateEquinoxOrSolstice(year, december)
 }
 
+// TODO: Move out to a separate test file
 func test() {
 	for i := 2010; i < 2020; i++ {
 		fmt.Println()
