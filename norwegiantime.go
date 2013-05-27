@@ -192,6 +192,22 @@ func atFarsdag(date time.Time) bool {
 	return false
 }
 
+// Vårjevndøgn
+func atNorthwardEquinox(date time.Time) bool {
+	if date.Month() != time.March {
+		return false
+	}
+	return atDate(date, northwardEquinox(date.Year()))
+}
+
+// Sommersolverv
+func atNorthernSolstice(date time.Time) bool {
+	if date.Month() != time.June {
+		return false
+	}
+	return atDate(date, northernSolstice(date.Year()))
+}
+
 // Checks if a day is at easter day +- a few days
 func atEasterPlus(date time.Time, days int) bool {
 	year := date.Year()
@@ -493,6 +509,11 @@ func NotableDay(date time.Time) (bool, string, bool) {
 	// Allehelgensdag
 	if atMD(date, 11, 1) {
 		descriptions = append(descriptions, "Allehelgensdag")
+	}
+
+	// Vårjevndøgn
+	if atNorthwardEquinox(date) {
+		descriptions = append(descriptions, "Vårjevndøgn")
 	}
 
 	// TODO: Implement these:
