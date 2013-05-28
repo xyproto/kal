@@ -14,5 +14,12 @@ Online API documentation
 [go.pkgdoc.org](http://go.pkgdoc.org/github.com/xyproto/norwegiantime)
 
 
+TODO
+----
+
+* More testing
+* Support for other languages and locales
+
+
 License: MIT
 Alexander Rødseth 2013

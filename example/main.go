@@ -7,6 +7,30 @@ import (
 	"github.com/xyproto/norwegiantime"
 )
 
+// List all the days of a given month
+func datebonanza(cal norwegiantime.Calendar, year int, month time.Month) {
+	fmt.Println(month.String(), year)
+	fmt.Println("====================")
+
+	current := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC)
+
+	// As long as we are in the same month
+	for current.Month() == month {
+
+		if red, desc, flag := cal.RedDay(current); red {
+			fmt.Printf("%s is red: %s (flag: %v)\n", current.String()[:10], desc, flag)
+		}
+
+		if notable, desc, flag := cal.NotableDay(current); notable {
+			fmt.Printf("%s is notable: %s (flag: %v)\n", current.String()[:10], desc, flag)
+		}
+
+		// Advance to the next day
+		current = current.AddDate(0, 0, 1)
+	}
+	fmt.Println()
+}
+
 // List notable days
 func notable(cal norwegiantime.Calendar, year int) {
 	current := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
@@ -43,32 +67,11 @@ func flag(cal norwegiantime.Calendar, year int) {
 	fmt.Println()
 }
 
-// List all the days of a given month
-func datebonanza(cal norwegiantime.Calendar, year int, month time.Month) {
-	fmt.Println(month.String(), year)
-	fmt.Println("====================")
-
-	current := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC)
-
-	// As long as we are in the same month
-	for current.Month() == month {
-
-		if red, desc, flag := cal.RedDay(current); red {
-			fmt.Printf("%s is red: %s (flag: %v)\n", current.String()[:10], desc, flag)
-		}
-
-		if notable, desc, flag := cal.NotableDay(current); notable {
-			fmt.Printf("%s is notable: %s (flag: %v)\n", current.String()[:10], desc, flag)
-		}
-
-		// Advance to the next day
-		current = current.AddDate(0, 0, 1)
-	}
-	fmt.Println()
-}
-
 func main() {
-	cal := norwegiantime.NewCalendarCache(norwegiantime.NewNorwegianCalendar())
+	cal, err := norwegiantime.NewCalendar("nb_NO", true)
+	if err != nil {
+		panic("Could not create a Norwegian calendar!")
+	}
 
 	//year := time.Now().Year()
 	year := 2013

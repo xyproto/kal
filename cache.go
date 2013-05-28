@@ -30,9 +30,12 @@ func (calca CalendarCache) RedDay(date time.Time) (bool, string, bool) {
 	// Get the information from the calendar
 	red, desc, flag := calca.cal.RedDay(date)
 
-	// Add to cache
-	calca.cacheRed[date] = desc
-	calca.cacheFlag[date] = flag
+	// Add red days to the cache
+	// TODO: Also cache non-red days
+	if red {
+		calca.cacheRed[date] = desc
+		calca.cacheFlag[date] = flag
+	}
 
 	return red, desc, flag
 }
@@ -47,9 +50,12 @@ func (calca CalendarCache) NotableDay(date time.Time) (bool, string, bool) {
 	// Get the information from the calendar
 	notable, desc, flag := calca.cal.NotableDay(date)
 
-	// Add to cache
-	calca.cacheNotable[date] = desc
-	calca.cacheFlag[date] = flag
+	// Add notable days to cache
+	// TODO: Also cache non-notable days
+	if notable {
+		calca.cacheNotable[date] = desc
+		calca.cacheFlag[date] = flag
+	}
 
 	return notable, desc, flag
 }
