@@ -31,6 +31,6 @@ General info
 License: MIT
 Alexander Rødseth 2013
 
-Photo of a "Moskus" (Muskox):
+Photo of a Muskox ("Moskus"):
 
 ![Moskus](http://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Ovibos_moschatus_qtl3.jpg/800px-Ovibos_moschatus_qtl3.jpg "Moskus")
