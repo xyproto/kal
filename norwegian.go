@@ -11,6 +11,11 @@ import (
 
 type NorwegianCalendar struct{}
 
+// Create a new Norwegian calendar
+func NewNorwegianCalendar() NorwegianCalendar {
+	return NorwegianCalendar{}
+}
+
 // Finds the Norwegian name for a day of the week.
 // Note that time.Weekday starts at 0 with Sunday, not Monday.
 func (nc NorwegianCalendar) DayName(day time.Weekday) string {

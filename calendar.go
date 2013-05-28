@@ -30,7 +30,7 @@ func NewCalendar(locCode string, cache bool) (Calendar, error) {
 	// Find the corresponding calendar struct for the given locale
 	switch locCode {
 	case "nb_NO":
-		cal = NorwegianCalendar{}
+		cal = NewNorwegianCalendar()
 	default:
 		supported = false
 	}
