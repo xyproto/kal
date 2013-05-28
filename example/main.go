@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/xyproto/norwegiantime"
+	"github.com/xyproto/moskus"
 )
 
 // List all the days of a given month
-func datebonanza(cal norwegiantime.Calendar, year int, month time.Month) {
+func datebonanza(cal moskus.Calendar, year int, month time.Month) {
 	fmt.Println(month.String(), year)
 	fmt.Println("====================")
 
@@ -32,7 +32,7 @@ func datebonanza(cal norwegiantime.Calendar, year int, month time.Month) {
 }
 
 // List notable days
-func notable(cal norwegiantime.Calendar, year int) {
+func notable(cal moskus.Calendar, year int) {
 	current := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
 
 	// As long as we are in the same year
@@ -50,14 +50,14 @@ func notable(cal norwegiantime.Calendar, year int) {
 }
 
 // List flag days
-func flag(cal norwegiantime.Calendar, year int) {
+func flag(cal moskus.Calendar, year int) {
 	current := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
 
 	// As long as we are in the same year
 	for current.Year() == year {
 
-		if flag := norwegiantime.FlagDay(cal, current); flag {
-			fmt.Printf("%s (%s) is a flaggdag\n", norwegiantime.Describe(cal, current), current.String()[:10])
+		if flag := moskus.FlagDay(cal, current); flag {
+			fmt.Printf("%s (%s) is a flaggdag\n", moskus.Describe(cal, current), current.String()[:10])
 		}
 
 		// Advance to the next day
@@ -68,7 +68,7 @@ func flag(cal norwegiantime.Calendar, year int) {
 }
 
 func main() {
-	cal, err := norwegiantime.NewCalendar("nb_NO", true)
+	cal, err := moskus.NewCalendar("nb_NO", true)
 	if err != nil {
 		panic("Could not create a Norwegian calendar!")
 	}
@@ -77,7 +77,7 @@ func main() {
 	year := 2013
 
 	// When is easter this year?
-	easter := norwegiantime.EasterDay(year)
+	easter := moskus.EasterDay(year)
 	fmt.Printf("Easter %d is at %s\n", year, easter.String()[:10])
 
 	// Show some info for March this year
