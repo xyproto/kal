@@ -31,7 +31,7 @@ func atWinterTime(date time.Time) bool {
 	return atDate(date, lastSundayInOctober)
 }
 
-// Morsdag, 2nd Sunday in February
+// Norwegian Mother's day, 2nd Sunday in February
 func atMorsdag(date time.Time) bool {
 	if date.Month() != time.February {
 		return false
@@ -46,7 +46,7 @@ func atMorsdag(date time.Time) bool {
 	return false
 }
 
-// Farsdag, 2nd Sunday in November
+// Norwegian Father's day, 2nd Sunday in February
 func atFarsdag(date time.Time) bool {
 	if date.Month() != time.November {
 		return false
@@ -61,7 +61,7 @@ func atFarsdag(date time.Time) bool {
 	return false
 }
 
-// Vårjevndøgn
+// Spring equinox
 func atNorthwardEquinox(date time.Time) bool {
 	if date.Month() != time.March {
 		return false
@@ -69,7 +69,7 @@ func atNorthwardEquinox(date time.Time) bool {
 	return atDate(date, northwardEquinox(date.Year()))
 }
 
-// Sommersolverv
+// Summer solstice
 func atNorthernSolstice(date time.Time) bool {
 	if date.Month() != time.June {
 		return false
@@ -77,7 +77,7 @@ func atNorthernSolstice(date time.Time) bool {
 	return atDate(date, northernSolstice(date.Year()))
 }
 
-// Høstjevndøgn
+// Autumn equinox
 func atSouthwardEquinox(date time.Time) bool {
 	if date.Month() != time.September {
 		return false
@@ -85,7 +85,7 @@ func atSouthwardEquinox(date time.Time) bool {
 	return atDate(date, southwardEquinox(date.Year()))
 }
 
-// Vintersolverv
+// Winter solstice
 func atSouthernSolstice(date time.Time) bool {
 	if date.Month() != time.December {
 		return false

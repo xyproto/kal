@@ -1,6 +1,6 @@
 package norwegiantime
 
-// Anything that's specific to Norway, with the exception of movable dates which are in movable.go
+// Anything that's specific to Norway, with the exception of some movable dates which are in movable.go
 // This calendar has a corresponding locale code in the NewCalendar function in calendar.go
 // Use this as a template for implementing other languages and locales
 
@@ -293,12 +293,12 @@ func (nc NorwegianCalendar) NotableDay(date time.Time) (bool, string, bool) {
 
 	// Siste søndag i mars, sommertid, klokka stilles 1 time frem
 	if atSummerTime(date) {
-		descriptions = append(descriptions, "Sommertid (-1t)")
+		descriptions = append(descriptions, "Sommertid (+1t)")
 	}
 
-	// Siste søndag i oktober, sommertid, klokka stilles 1 time frem
+	// Siste søndag i oktober, vintertid, klokka stilles 1 time tilbake
 	if atWinterTime(date) {
-		descriptions = append(descriptions, "Vintertid (+1t)")
+		descriptions = append(descriptions, "Vintertid (-1t)")
 	}
 
 	// If there are notable events, return them as a string
