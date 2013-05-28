@@ -1,6 +1,7 @@
 package norwegiantime
 
 // Anything that's specific to Norway, nothing more, nothing less
+// Use this as a template for implementing other languages and locales
 
 import (
 	"strings"
@@ -8,11 +9,6 @@ import (
 )
 
 type NorwegianCalendar struct{}
-
-func NewNorwegianCalendar() NorwegianCalendar {
-	var nc NorwegianCalendar
-	return nc
-}
 
 // Finds the Norwegian name for a day of the week.
 // Note that time.Weekday starts at 0 with Sunday, not Monday.

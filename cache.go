@@ -54,7 +54,7 @@ func (calca CalendarCache) NotableDay(date time.Time) (bool, string, bool) {
 	return notable, desc, flag
 }
 
-// --- These are there just to satisfy the Calendar interface ---
+// --- These are here just to satisfy the Calendar interface ---
 
 func (calca CalendarCache) NotablePeriod(date time.Time) (bool, string) {
 	return calca.cal.NotablePeriod(date)
