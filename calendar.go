@@ -16,9 +16,11 @@ type Calendar interface {
 	NotablePeriod(date time.Time) (bool, string)
 }
 
-/* Creates a new calendar based on a given langauge string
+/* <p>Creates a new calendar based on a given langauge string.</p>
  * Supported strings:
- *   nb_NO (Norwegian Bokmål)
+ * <ul>
+ * <li>nb_NO (Norwegian Bokmål)</li>
+ * </ul>
  * The calendar can be cached for faster lookups
  */
 func NewCalendar(locCode string, cache bool) (Calendar, error) {
