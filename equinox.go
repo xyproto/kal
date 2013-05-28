@@ -4,7 +4,6 @@ package moskus
 // Adapted from jgiesen.de/astro/astroJS/seasons/seasons.js
 
 import (
-	"fmt"
 	"math"
 	"time"
 )
@@ -91,7 +90,7 @@ func calculateEquinoxOrSolstice(year int, fn func(float64) float64) time.Time {
 	return time.Date(year, time.Month(month), day, hour, minute, 0, 0, time.UTC)
 }
 
-// Vårjevndøgn
+// Spring equinox for the northern hemisphere
 func northwardEquinox(year int) time.Time {
 	march := func(y float64) float64 {
 		return 2451623.80984 + 365242.37404*y + 0.05169*y*y - 0.00411*y*y*y - 0.00057*y*y*y*y
@@ -99,7 +98,7 @@ func northwardEquinox(year int) time.Time {
 	return calculateEquinoxOrSolstice(year, march)
 }
 
-// Sommersolverv
+// Summer solstice for the northern hemisphere
 func northernSolstice(year int) time.Time {
 	june := func(y float64) float64 {
 		return 2451716.56767 + 365241.62603*y + 0.00325*y*y + 0.00888*y*y*y - 0.00030*y*y*y*y
@@ -107,7 +106,7 @@ func northernSolstice(year int) time.Time {
 	return calculateEquinoxOrSolstice(year, june)
 }
 
-// Høstjevndøgn
+// Autumn equinox for the northern hemisphere
 func southwardEquinox(year int) time.Time {
 	september := func(y float64) float64 {
 		return 2451810.21715 + 365242.01767*y - 0.11575*y*y + 0.00337*y*y*y + 0.00078*y*y*y*y
@@ -115,21 +114,10 @@ func southwardEquinox(year int) time.Time {
 	return calculateEquinoxOrSolstice(year, september)
 }
 
-// Vintersolverv
+// Winter solstice for the nothern hemisphere
 func southernSolstice(year int) time.Time {
 	december := func(y float64) float64 {
 		return 2451900.05952 + 365242.74049*y - 0.06223*y*y - 0.00823*y*y*y + 0.00032*y*y*y*y
 	}
 	return calculateEquinoxOrSolstice(year, december)
-}
-
-// TODO: Move out to a separate test file
-func test() {
-	for i := 2010; i < 2020; i++ {
-		fmt.Println()
-		fmt.Println(northwardEquinox(i))
-		fmt.Println(northernSolstice(i))
-		fmt.Println(southwardEquinox(i))
-		fmt.Println(southernSolstice(i))
-	}
 }

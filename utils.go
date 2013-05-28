@@ -91,10 +91,3 @@ func nthSundayOfMonth(date time.Time, n int) (time.Time, error) {
 
 	return date, errors.New(fmt.Sprintf("Could not find the %dth Sunday in %s!", n, date.Month()))
 }
-
-// Returns the third boolean argument given a time.Time value and
-// a function that takes a time.Time and returns a bool, a string and a bool
-func thirdBool(date time.Time, fn func(time.Time) (bool, string, bool)) bool {
-	_, _, b := fn(date)
-	return b
-}

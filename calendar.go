@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// TODO: Add support for other languages and locales
+// TODO: Add support for more languages and locales
 
 // A common interface for calendars for all languages and locales
 type Calendar interface {
@@ -47,7 +47,14 @@ func NewCalendar(locCode string, cache bool) (Calendar, error) {
 	return NewCalendarCache(cal), nil
 }
 
-// Checks if a given date is a flying flag day or not
+// Returns the third boolean argument given a time.Time value and
+// a function that takes a time.Time and returns a bool, a string and a bool
+func thirdBool(date time.Time, fn func(time.Time) (bool, string, bool)) bool {
+	_, _, b := fn(date)
+	return b
+}
+
+// Checks if a given date is a flag flying day or not
 func FlagDay(cal Calendar, date time.Time) bool {
 	return thirdBool(date, cal.RedDay) || thirdBool(date, cal.NotableDay)
 }

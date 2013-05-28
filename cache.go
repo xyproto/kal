@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// A CalendarCache wraps and caches a Calendar
 type CalendarCache struct {
 	cal          Calendar
 	cacheRed     map[time.Time]string // red day description
@@ -11,6 +12,9 @@ type CalendarCache struct {
 	cacheFlag    map[time.Time]bool   // flag flying day
 }
 
+// Creates a new CalendarCache that wraps and caches the given Calendar.
+// A CalendarCache is also a Calendar itself, since it implements the
+// Calendar interface.
 func NewCalendarCache(cal Calendar) CalendarCache {
 	var calca CalendarCache
 	calca.cal = cal
@@ -20,6 +24,7 @@ func NewCalendarCache(cal Calendar) CalendarCache {
 	return calca
 }
 
+// Wraps the RedDay function and caches some of the results
 func (calca CalendarCache) RedDay(date time.Time) (bool, string, bool) {
 	// Return from cache, if it's there
 	desc, ok := calca.cacheRed[date]
@@ -40,6 +45,7 @@ func (calca CalendarCache) RedDay(date time.Time) (bool, string, bool) {
 	return red, desc, flag
 }
 
+// Wraps the NotableDay function and caches some of the results
 func (calca CalendarCache) NotableDay(date time.Time) (bool, string, bool) {
 	// Return from cache, if it's there
 	desc, ok := calca.cacheNotable[date]
@@ -62,14 +68,17 @@ func (calca CalendarCache) NotableDay(date time.Time) (bool, string, bool) {
 
 // --- These are here just to satisfy the Calendar interface ---
 
+// Wraps the NotablePeriod function
 func (calca CalendarCache) NotablePeriod(date time.Time) (bool, string) {
 	return calca.cal.NotablePeriod(date)
 }
 
+// Wraps the DayName function
 func (calca CalendarCache) DayName(date time.Weekday) string {
 	return calca.cal.DayName(date)
 }
 
+// Wraps the NormalDay function
 func (calca CalendarCache) NormalDay() string {
 	return calca.cal.NormalDay()
 }

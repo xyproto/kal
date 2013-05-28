@@ -19,8 +19,7 @@ func NewNorwegianCalendar() NorwegianCalendar {
 // Finds the Norwegian name for a day of the week.
 // Note that time.Weekday starts at 0 with Sunday, not Monday.
 func (nc NorwegianCalendar) DayName(day time.Weekday) string {
-	days := []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}
-	return days[int(day)]
+	return []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}[int(day)]
 }
 
 // Checks if a given date is a "red day" in the Norwegian calendar.
