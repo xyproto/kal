@@ -4,19 +4,19 @@ import (
 	"time"
 )
 
-// A CalendarCache wraps and caches a Calendar
-type CalendarCache struct {
+// A CachedCalendar wraps and caches a Calendar
+type CachedCalendar struct {
 	cal          Calendar
 	cacheRed     map[time.Time]string // red day description
 	cacheNotable map[time.Time]string // notable day description
 	cacheFlag    map[time.Time]bool   // flag flying day
 }
 
-// Creates a new CalendarCache that wraps and caches the given Calendar.
-// A CalendarCache is also a Calendar itself, since it implements the
+// Creates a new CachedCalendar that wraps and caches the given Calendar.
+// A CachedCalendar is also a Calendar itself, since it implements the
 // Calendar interface.
-func NewCalendarCache(cal Calendar) CalendarCache {
-	var calca CalendarCache
+func NewCachedCalendar(cal Calendar) CachedCalendar {
+	var calca CachedCalendar
 	calca.cal = cal
 	calca.cacheRed = make(map[time.Time]string)
 	calca.cacheNotable = make(map[time.Time]string)
@@ -25,7 +25,7 @@ func NewCalendarCache(cal Calendar) CalendarCache {
 }
 
 // Wraps the RedDay function and caches some of the results
-func (calca CalendarCache) RedDay(date time.Time) (bool, string, bool) {
+func (calca CachedCalendar) RedDay(date time.Time) (bool, string, bool) {
 	// Return from cache, if it's there
 	desc, ok := calca.cacheRed[date]
 	if ok {
@@ -46,7 +46,7 @@ func (calca CalendarCache) RedDay(date time.Time) (bool, string, bool) {
 }
 
 // Wraps the NotableDay function and caches some of the results
-func (calca CalendarCache) NotableDay(date time.Time) (bool, string, bool) {
+func (calca CachedCalendar) NotableDay(date time.Time) (bool, string, bool) {
 	// Return from cache, if it's there
 	desc, ok := calca.cacheNotable[date]
 	if ok {
@@ -69,16 +69,16 @@ func (calca CalendarCache) NotableDay(date time.Time) (bool, string, bool) {
 // --- These are here just to satisfy the Calendar interface ---
 
 // Wraps the NotablePeriod function
-func (calca CalendarCache) NotablePeriod(date time.Time) (bool, string) {
+func (calca CachedCalendar) NotablePeriod(date time.Time) (bool, string) {
 	return calca.cal.NotablePeriod(date)
 }
 
 // Wraps the DayName function
-func (calca CalendarCache) DayName(date time.Weekday) string {
+func (calca CachedCalendar) DayName(date time.Weekday) string {
 	return calca.cal.DayName(date)
 }
 
 // Wraps the NormalDay function
-func (calca CalendarCache) NormalDay() string {
+func (calca CachedCalendar) NormalDay() string {
 	return calca.cal.NormalDay()
 }

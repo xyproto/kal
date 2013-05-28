@@ -45,8 +45,8 @@ func NewCalendar(locCode string, cache bool) (Calendar, error) {
 		// Return a calendar without cache
 		return cal, nil
 	}
-	// Return a cached calendar cache
-	return NewCalendarCache(cal), nil
+	// Return a cached calendar
+	return NewCachedCalendar(cal), nil
 }
 
 // Returns the third boolean argument given a time.Time value and
