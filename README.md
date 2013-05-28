@@ -10,7 +10,7 @@ Also has functions for finding easter and other movable dates.
 Online API documentation
 ------------------------
 
-[go.pkgdoc.org](http://go.pkgdoc.org/github.com/xyproto/norwegiantime)
+[go.pkgdoc.org](http://go.pkgdoc.org/github.com/xyproto/moskus)
 
 
 Contributions
