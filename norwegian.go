@@ -22,7 +22,7 @@ func (nc NorwegianCalendar) DayName(day time.Weekday) string {
 	return []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}[int(day)]
 }
 
-// Checks if a given date is a "red day" in the Norwegian calendar.
+// Checks if a given date is a "red day" (public holiday) in the Norwegian calendar.
 // Returns true/false, a description and true/false for if it's a flag day.
 // The dates will never overlap.
 // Includes the 24th of December, even though only half the day is red.
