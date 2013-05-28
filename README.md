@@ -1,11 +1,11 @@
 moskus
 ======
 
-A calendar package for Go for finding public holidays, notable days and flag flying days.
+A calendar package for Go for finding public holidays, easter, notable days, equinoxes, solstices and flag flying days.
 
 Currently, only the Norwegian calendar is supported, but more languages and locales can be added.
 
-Also has functions for finding easter and other movable dates.
+In order to implement a calendar application, knowing which days are holidays can be required.
 
 Online API documentation
 ------------------------
