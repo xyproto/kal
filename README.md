@@ -5,7 +5,7 @@ A calendar package for Go for finding public holidays, easter, notable days, equ
 
 Currently, only the Norwegian calendar is supported, but more languages and locales can be added.
 
-In order to implement a calendar application, knowing which days are holidays can be required.
+In order to implement a calendar application, knowing which days are holidays can be a requirement.
 
 Online API documentation
 ------------------------
