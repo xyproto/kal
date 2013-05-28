@@ -62,7 +62,7 @@ func atEasterPlus(date time.Time, days int) bool {
 	return atDate(date, when)
 }
 
-// Returns the easter day (Første påskedag) for a given year
+// Returns the easter day for any given year
 func EasterDay(year int) time.Time {
 	month, day := easterDaySpencerJones(year)
 	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)

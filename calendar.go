@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+// TODO: Add support for other languages and locales
+
 // A common interface for calendars for all languages and locales
 type Calendar interface {
 	DayName(time.Weekday) string
@@ -67,4 +69,10 @@ func Describe(cal Calendar, date time.Time) string {
 		return fulldesc
 	}
 	return cal.NormalDay()
+}
+
+// Get the week number, from 1 to 53
+func WeekNum(date time.Time) int {
+	_, weeknum := date.ISOWeek()
+	return weeknum
 }

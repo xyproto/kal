@@ -1,6 +1,7 @@
 package norwegiantime
 
-// Anything that's specific to Norway, nothing more, nothing less
+// Anything that's specific to Norway, with the exception of movable dates which are in movable.go
+// This calendar has a corresponding locale code in the NewCalendar function in calendar.go
 // Use this as a template for implementing other languages and locales
 
 import (
@@ -312,14 +313,13 @@ func (nc NorwegianCalendar) NotableDay(date time.Time) (bool, string, bool) {
 }
 
 // Checks if a given date is in a notable time range (summer holidays, for instance)
-// Will always describe the season
 func (nc NorwegianCalendar) NotablePeriod(date time.Time) (bool, string) {
 	// TODO:
 	// uke 28, 29 og 30, fellesferie
 	// jul
 	// fastelavn
 	// faste
-	// sommer/vinter/vår/høst
+	// sommer/vinter/vår/høst (legg denne først i listen)
 	return false, ""
 }
 

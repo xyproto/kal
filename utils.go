@@ -92,12 +92,6 @@ func nthSundayOfMonth(date time.Time, n int) (time.Time, error) {
 	return date, errors.New(fmt.Sprintf("Could not find the %dth Sunday in %s!", n, date.Month()))
 }
 
-// Get the week number, from 1 to 53
-func WeekNum(date time.Time) int {
-	_, weeknum := date.ISOWeek()
-	return weeknum
-}
-
 // Returns the third boolean argument given a time.Time value and
 // a function that takes a time.Time and returns a bool, a string and a bool
 func thirdBool(date time.Time, fn func(time.Time) (bool, string, bool)) bool {
