@@ -1,4 +1,4 @@
-package norwegiantime
+package moskus
 
 // Anything that's specific to Norway, with the exception of some movable dates which are in movable.go
 // This calendar has a corresponding locale code in the NewCalendar function in calendar.go

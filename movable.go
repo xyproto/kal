@@ -1,4 +1,4 @@
-package norwegiantime
+package moskus
 
 // Movable dates
 
