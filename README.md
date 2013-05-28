@@ -13,6 +13,12 @@ Online API documentation
 [go.pkgdoc.org](http://go.pkgdoc.org/github.com/xyproto/norwegiantime)
 
 
+Contributions
+-------------
+
+Pull requests are welcome!
+
+
 TODO
 ----
 
