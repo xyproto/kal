@@ -14,7 +14,7 @@ type Calendar interface {
 	RedDay(time.Time) (bool, string, bool)
 	NotableDay(time.Time) (bool, string, bool)
 	NormalDay() string
-	NotablePeriod(date time.Time) (bool, string)
+	NotablePeriod(time.Time) (bool, string)
 	MonthName(time.Month) string
 }
 

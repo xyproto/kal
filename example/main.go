@@ -93,4 +93,7 @@ func main() {
 	notable(cal, year+1)
 
 	flag(cal, year)
+
+	fmt.Println(cal.DayName(1))
+	fmt.Println(cal.MonthName(time.Month(12)))
 }
