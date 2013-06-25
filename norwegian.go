@@ -22,6 +22,11 @@ func (nc NorwegianCalendar) DayName(day time.Weekday) string {
 	return []string{"søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"}[int(day)]
 }
 
+// Finds the Norwegian name for a given month
+func (nc NorwegianCalendar) MonthName(month time.Month) string {
+	return []string{"januar", "februar", "mars", "april", "mai", "juni", "juli", "august", "september", "oktober", "november", "desember"}[int(month)-1]
+}
+
 // Checks if a given date is a "red day" (public holiday) in the Norwegian calendar.
 // Returns true/false, a description and true/false for if it's a flag day.
 // The dates will never overlap.

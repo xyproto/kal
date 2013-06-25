@@ -15,6 +15,7 @@ type Calendar interface {
 	NotableDay(time.Time) (bool, string, bool)
 	NormalDay() string
 	NotablePeriod(date time.Time) (bool, string)
+	MonthName(time.Month) string
 }
 
 /* Creates a new calendar based on a given langauge string.
