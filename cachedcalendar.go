@@ -83,7 +83,7 @@ func (calca CachedCalendar) NormalDay() string {
 	return calca.cal.NormalDay()
 }
 
-// Wraps the month to string function provided by the time module
+// Wraps the MonthName function
 func (calca CachedCalendar) MonthName(month time.Month) string {
-	return month.String()
+	return calca.cal.MonthName(month)
 }

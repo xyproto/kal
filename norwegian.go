@@ -1,5 +1,7 @@
 package moskus
 
+// locale: nb_NO
+
 // Anything that's specific to Norway, with the exception of some movable dates which are in movable.go
 // This calendar has a corresponding locale code in the NewCalendar function in calendar.go
 // Use this as a template for implementing other languages and locales
@@ -332,7 +334,7 @@ func (nc NorwegianCalendar) NotablePeriod(date time.Time) (bool, string) {
 	return false, ""
 }
 
-// Vanlig hverdag
+// An ordinary day
 func (nc NorwegianCalendar) NormalDay() string {
 	return "Hverdag"
 }
