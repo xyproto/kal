@@ -17,7 +17,8 @@ func atPalmSunday(date time.Time) bool {
 
 // Checks if the given date is at the last sunday in March.
 // (Transition to summertime, adjust watches one hour ahead)
-func atSummerTime(date time.Time) bool {
+// This date is for the Norwegian transition to summertime
+func atSommertid(date time.Time) bool {
 	afterMarch := time.Date(date.Year(), time.April, 1, 0, 0, 0, 0, time.UTC)
 	lastSundayInMarch, _ := searchBackwardsForSunday(afterMarch)
 	return atDate(date, lastSundayInMarch)
@@ -25,7 +26,8 @@ func atSummerTime(date time.Time) bool {
 
 // Checks if the given date is at the last sunday in October.
 // (Transition to wintertime, adjust watches one hour back)
-func atWinterTime(date time.Time) bool {
+// This date is for the Norwegian transition to wintertime
+func atVintertid(date time.Time) bool {
 	afterOctober := time.Date(date.Year(), time.November, 1, 0, 0, 0, 0, time.UTC)
 	lastSundayInOctober, _ := searchBackwardsForSunday(afterOctober)
 	return atDate(date, lastSundayInOctober)
@@ -33,32 +35,12 @@ func atWinterTime(date time.Time) bool {
 
 // Norwegian Mother's day, 2nd Sunday in February
 func atMorsdag(date time.Time) bool {
-	if date.Month() != time.February {
-		return false
-	}
-	nthSunday, err := nthSundayOfMonth(date, 2)
-	if err != nil {
-		return false
-	}
-	if atDate(date, nthSunday) {
-		return true
-	}
-	return false
+	return atNthWeekdayOfMonth(date, 2, time.Sunday, time.February)
 }
 
-// Norwegian Father's day, 2nd Sunday in February
+// Norwegian Father's day, 2nd Sunday in November
 func atFarsdag(date time.Time) bool {
-	if date.Month() != time.November {
-		return false
-	}
-	nthSunday, err := nthSundayOfMonth(date, 2)
-	if err != nil {
-		return false
-	}
-	if atDate(date, nthSunday) {
-		return true
-	}
-	return false
+	return atNthWeekdayOfMonth(date, 2, time.Sunday, time.November)
 }
 
 // Spring equinox
@@ -92,3 +74,25 @@ func atSouthernSolstice(date time.Time) bool {
 	}
 	return atDate(date, southernSolstice(date.Year()))
 }
+
+// Check if the given date is at the Nth weekday (for istance Sunday) of a given month
+func atNthWeekdayOfMonth(date time.Time, n int, weekday time.Weekday, month time.Month) bool {
+	if date.Month() != month {
+		return false
+	}
+	nthDay, err := nthWeekdayOfMonth(date, n, weekday)
+	if err != nil {
+		return false
+	}
+	if atDate(date, nthDay) {
+		return true
+	}
+	return false
+}
+
+// Birthday of Dr. Martin Luther King, Jr.
+// Third monday in January
+func atDrMarthinLutherKingJrBirthday(date time.Time) bool {
+	return atNthWeekdayOfMonth(date, 3, time.Monday, time.January)
+}
+
