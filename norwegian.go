@@ -303,12 +303,12 @@ func (nc NorwegianCalendar) NotableDay(date time.Time) (bool, string, bool) {
 	}
 
 	// Siste søndag i mars, sommertid, klokka stilles 1 time frem
-	if atSummerTime(date) {
+	if atSommertid(date) {
 		descriptions = append(descriptions, "Sommertid (+1t)")
 	}
 
 	// Siste søndag i oktober, vintertid, klokka stilles 1 time tilbake
-	if atWinterTime(date) {
+	if atVintertid(date) {
 		descriptions = append(descriptions, "Vintertid (-1t)")
 	}
 

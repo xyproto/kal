@@ -8,7 +8,6 @@ package moskus
 // This calendar has a corresponding locale code in the NewCalendar function in calendar.go
 
 import (
-	"strings"
 	"time"
 )
 
@@ -62,6 +61,12 @@ func (nc USCalendar) RedDay(date time.Time) (bool, string, bool) {
 
 	// TODO: The rest
 
+	// Red days
+	if desc != "" {
+		// Then return
+		return true, desc, flag
+	}
+
 	// Normal days
 	return false, desc, false
 }
@@ -77,8 +82,8 @@ func (nc USCalendar) NotableDay(date time.Time) (bool, string, bool) {
 	// Source: http://no.wikipedia.org/wiki/Norges_offisielle_flaggdager
 
 	var (
-		descriptions []string
-		flag         bool
+		//descriptions []string
+		//flag         bool
 	)
 
 	// Since days may overlap, "flaggdager" must come first for the flag

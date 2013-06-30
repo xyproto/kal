@@ -92,7 +92,6 @@ func atNthWeekdayOfMonth(date time.Time, n int, weekday time.Weekday, month time
 
 // Birthday of Dr. Martin Luther King, Jr.
 // Third monday in January
-func atDrMarthinLutherKingJrBirthday(date time.Time) bool {
+func atDrMartinLutherKingJrBirthday(date time.Time) bool {
 	return atNthWeekdayOfMonth(date, 3, time.Monday, time.January)
 }
-
