@@ -94,7 +94,7 @@ func nthWeekdayOfMonth(date time.Time, n int, whichWeekday time.Weekday) (time.T
 		current = current.AddDate(0, 0, 1)
 	}
 
-	return date, errors.New(fmt.Sprintf("Could not find the %dth %s in %s!", n, whichWeekday, date.Month()))
+	return date, fmt.Errorf("Could not find the %dth %s in %s!", n, whichWeekday, date.Month())
 }
 
 // Find the Nth sunday of a given year and month
