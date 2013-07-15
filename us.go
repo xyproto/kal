@@ -61,6 +61,28 @@ func (nc USCalendar) RedDay(date time.Time) (bool, string, bool) {
 
 	// TODO: The rest
 
+	// Elections: 2000, 2004, 2008, 2012 etc
+
+	/*
+	First January 20 following a Presidential electionInauguration DayObserved only by federal government employees in Washington, D.C., and the border counties of Maryland and Virginia to relieve congestion that occurs with this major event. Swearing-in of President of the United States and Vice President of the United States. Celebrated every fourth year. Note: Takes place on January 21 if the 20th is a Sunday (although the President is still privately inaugurated on the 20th). If Inauguration Day falls on a Saturday, the preceding Friday is not a federal holiday.
+
+	Third Monday in FebruaryWashington's Birthday/Presidents' DayWashington's Birthday was first declared a federal holiday by an 1879 act of Congress. The Uniform Holidays Act, 1968, shifted the date of the commemoration of Washington's Birthday from February 22 to the third Monday in February (between February 15 and 21, meaning the observed holiday never falls on Washington's actual birthday). Because of this, combined with the fact that President Abraham Lincoln's birthday falls on February 12, many people now refer to this holiday as "Presidents' Day" and consider it a day honoring all American presidents. However, neither the Uniform Holidays Act nor any subsequent law changed the name of the holiday from Washington's Birthday to Presidents' Day.[8]
+
+	Last Monday in MayMemorial DayHonors the nation's war dead from the Civil War onwards; marks the unofficial beginning of the summer season. (traditionally May 30, shifted by the Uniform Holidays Act 1968)
+
+	July 4Independence DayHonorsCelebrates the signing of the Declaration of Independence from British rule, also called the Fourth of July. Firework celebrations are held in many cities throughout the nation.
+
+	First Monday in SeptemberLabor DayHonorsCelebratesCelebrates the achievements of workers and the labor movement; marks the unofficial end of the summer season.
+
+	Second Monday in OctoberColumbus DayHonorsCelebratesCelebratesHonors Christopher Columbus, traditional discoverer of the Americas. In some areas it is also a celebration of Italian culture and heritage. (traditionally October 12)
+
+	November 11Veterans DayHonorsCelebratesCelebratesHonorsHonors all veterans of the United States armed forces. It is observed on November 11 to recall the end of World War I on that date in 1918 (major hostilities of World War I were formally ended at the 11th hour of the 11th day of the 11th month of 1918 with the German signing of the Armistice).
+
+	Fourth Thursday in NovemberThanksgiving DayHonorsCelebratesCelebratesHonorsHonorsTraditionally celebrates the giving of thanks for the autumn harvest. Traditionally includes the sharing of a turkey dinner. Traditional start of the Christmas and holiday season.
+
+	December 25ChristmasThe most widely celebrated holiday of the Christian year, Christmas is observed as a commemoration of the birth of Jesus of Nazareth.
+	*/
+
 	// Red days
 	if desc != "" {
 		// Then return
