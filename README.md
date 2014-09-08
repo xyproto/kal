@@ -1,19 +1,21 @@
 moskus
 ======
 
-A calendar package for Go for finding public holidays, easter, notable days, equinoxes, solstices and flag flying days.
+[![Build Status](https://travis-ci.org/xyproto/moskus.svg?branch=master)](https://travis-ci.org/xyproto/moskus)
 
-Currently, only the Norwegian calendar is supported, but more languages and locales can be added.
+Calendar package for Go for finding public holidays, easter, notable days, equinoxes, solstices and flag flying days.
 
-The US calendar is almost done, but still a work in progress.
+* Currently, only the Norwegian calendar is supported, but more languages and locales can be added.
 
-Implementing additional calendars is relatively easy.
+* The US calendar is almost done, but is still a work in progress.
+
+* Implementing additional calendars is relatively easy.
 
 
 Online API documentation
 ------------------------
 
-[go.pkgdoc.org](http://go.pkgdoc.org/github.com/xyproto/moskus)
+[godoc.org](http://godoc.org/github.com/xyproto/moskus)
 
 
 Contributions
