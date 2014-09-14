@@ -43,15 +43,64 @@ func sundaysInPeriod(date time.Time, days int) int {
 	return numberOfWeekdaysInPeriod(date, days, time.Sunday)
 }
 
-// Find a preceeding sunday
+// Find a preceeding sunday, same year
 func searchBackwardsForSunday(date time.Time) (time.Time, error) {
+	return searchBackwardsForDaySameYear(date, time.Sunday)
+}
+
+// Find the last weekday given a month/year
+func lastDayOfMonth(date time.Time, weekday time.Weekday) time.Time {
+
+	var found time.Time
+
+	// Start with the first day in the given month
+	current := time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.UTC)
+
+	// Stay within the same month
+	for current.Month() == date.Month() {
+		// Check if it's the given weekday
+		if current.Weekday() == weekday {
+			// Found one
+			found = current
+		}
+
+		// Go the next day
+		current = current.AddDate(0, 0, 1)
+	}
+
+	// Return the last found day
+	return found
+}
+
+// Find a later weekday, same month
+func searchForwardsForDaySameMonth(date time.Time, weekday time.Weekday) (time.Time, error) {
+	// Start with the day after the given date
+	current := date.AddDate(0, 0, 1)
+
+	// Stay within the same month
+	for current.Month() == date.Month() {
+		// Check if it's the given weekday
+		if current.Weekday() == weekday {
+			// Found one
+			return current, nil
+		}
+
+		// Go the next day
+		current = current.AddDate(0, 0, 1)
+	}
+
+	return date, errors.New("Could not find a later " + weekday.String() + " the same month!")
+}
+
+// Find a preceeding weekday, same year
+func searchBackwardsForDaySameYear(date time.Time, weekday time.Weekday) (time.Time, error) {
 	// Start with the day before the given date
 	current := date.AddDate(0, 0, -1)
 
 	// Stay within the same year
 	for current.Year() == date.Year() {
-		// Check if it's a Sunday
-		if current.Weekday() == time.Sunday {
+		// Check if it's the given weekday
+		if current.Weekday() == weekday {
 			// Found one
 			return current, nil
 		}
@@ -60,7 +109,27 @@ func searchBackwardsForSunday(date time.Time) (time.Time, error) {
 		current = current.AddDate(0, 0, -1)
 	}
 
-	return date, errors.New("Could not find an earlier Sunday the same year!")
+	return date, errors.New("Could not find an earlier " + weekday.String() + " the same year!")
+}
+
+// Check if the given date is at the Nth weekday (for istance Sunday) of a given month
+func atNthWeekdayOfMonth(date time.Time, n int, weekday time.Weekday, month time.Month) bool {
+	if date.Month() != month {
+		return false
+	}
+	nthDay, err := nthWeekdayOfMonth(date, n, weekday)
+	if err != nil {
+		return false
+	}
+	if atDate(date, nthDay) {
+		return true
+	}
+	return false
+}
+
+// Check if the given date is at the last type of weekday (like monday)
+func atLastWeekday(date time.Time, weekday time.Weekday, month time.Month) bool {
+	return (date.Month() == month) && atDate(date, lastDayOfMonth(date, weekday))
 }
 
 // Find the Nth type of weekday of a given year and month

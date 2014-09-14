@@ -44,7 +44,7 @@ func (nc NorwegianCalendar) RedDay(date time.Time) (bool, string, bool) {
 	)
 
 	// Sundays
-	if date.Weekday() == 0 {
+	if date.Weekday() == time.Sunday {
 		desc = "Søndag"
 	}
 

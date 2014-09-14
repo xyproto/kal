@@ -43,7 +43,7 @@ func (nc USCalendar) RedDay(date time.Time) (bool, string, bool) {
 	)
 
 	// Sundays
-	if date.Weekday() == 0 {
+	if date.Weekday() == time.Sunday {
 		desc = "Sunday"
 	}
 
@@ -54,34 +54,76 @@ func (nc USCalendar) RedDay(date time.Time) (bool, string, bool) {
 	}
 
 	// Birthday of Dr. Martin Luther King, Jr.
-	if atDrMartinLutherKingJrBirthday(date) {
+	if atNthWeekdayOfMonth(date, 3, time.Monday, time.January) {
 		desc = "Birthday of Dr. Martin Luther King, Jr."
 		flag = true
 	}
 
-	// TODO: The rest
+	// Inauguration day
+	if atInaugurationDay(date) {
+		desc = "Inauguration Day"
+		flag = true
+	}
 
-	// Elections: 2000, 2004, 2008, 2012 etc
+	// Lincoln's birthday
+	if atMD(date, 2, 12) {
+		desc = "Lincoln's birthday"
+		flag = true
+	}
 
-	/*
-		First January 20 following a Presidential electionInauguration DayObserved only by federal government employees in Washington, D.C., and the border counties of Maryland and Virginia to relieve congestion that occurs with this major event. Swearing-in of President of the United States and Vice President of the United States. Celebrated every fourth year. Note: Takes place on January 21 if the 20th is a Sunday (although the President is still privately inaugurated on the 20th). If Inauguration Day falls on a Saturday, the preceding Friday is not a federal holiday.
+	// Washington's Birthday / Presidents' day
+	if atNthWeekdayOfMonth(date, 3, time.Monday, time.February) {
+		desc = "Washington's Birthday"
+		flag = true
+	}
 
-		Third Monday in FebruaryWashington's Birthday/Presidents' DayWashington's Birthday was first declared a federal holiday by an 1879 act of Congress. The Uniform Holidays Act, 1968, shifted the date of the commemoration of Washington's Birthday from February 22 to the third Monday in February (between February 15 and 21, meaning the observed holiday never falls on Washington's actual birthday). Because of this, combined with the fact that President Abraham Lincoln's birthday falls on February 12, many people now refer to this holiday as "Presidents' Day" and consider it a day honoring all American presidents. However, neither the Uniform Holidays Act nor any subsequent law changed the name of the holiday from Washington's Birthday to Presidents' Day.[8]
+	// Armed Forces Day
+	if atNthWeekdayOfMonth(date, 3, time.Saturday, time.May) {
+		desc = "Armed Forces Day"
+		flag = true
+	}
 
-		Last Monday in MayMemorial DayHonors the nation's war dead from the Civil War onwards; marks the unofficial beginning of the summer season. (traditionally May 30, shifted by the Uniform Holidays Act 1968)
+	// Memorial Day
+	if atLastWeekday(date, time.Monday, time.May) {
+		desc = "Memorial Day"
+		flag = true
+	}
 
-		July 4Independence DayHonorsCelebrates the signing of the Declaration of Independence from British rule, also called the Fourth of July. Firework celebrations are held in many cities throughout the nation.
+	// 4th of July
+	if atMD(date, 7, 4) {
+		desc = "Independence Day"
+		flag = true
+	}
 
-		First Monday in SeptemberLabor DayHonorsCelebratesCelebrates the achievements of workers and the labor movement; marks the unofficial end of the summer season.
+	// Labor Day
+	if atNthWeekdayOfMonth(date, 1, time.Monday, time.September) {
+		desc = "Labor Day"
+		flag = true
+	}
 
-		Second Monday in OctoberColumbus DayHonorsCelebratesCelebratesHonors Christopher Columbus, traditional discoverer of the Americas. In some areas it is also a celebration of Italian culture and heritage. (traditionally October 12)
+	// Columbus Day
+	if atNthWeekdayOfMonth(date, 2, time.Monday, time.October) {
+		desc = "Columbus Day"
+		flag = true
+	}
 
-		November 11Veterans DayHonorsCelebratesCelebratesHonorsHonors all veterans of the United States armed forces. It is observed on November 11 to recall the end of World War I on that date in 1918 (major hostilities of World War I were formally ended at the 11th hour of the 11th day of the 11th month of 1918 with the German signing of the Armistice).
+	// Veterans Day
+	if atMD(date, 11, 11) {
+		desc = "Veterans Day"
+		flag = true
+	}
 
-		Fourth Thursday in NovemberThanksgiving DayHonorsCelebratesCelebratesHonorsHonorsTraditionally celebrates the giving of thanks for the autumn harvest. Traditionally includes the sharing of a turkey dinner. Traditional start of the Christmas and holiday season.
+	// Thanksgiving Day
+	if atNthWeekdayOfMonth(date, 4, time.Thursday, time.November) {
+		desc = "Thanksgiving Day"
+		flag = true
+	}
 
-		December 25ChristmasThe most widely celebrated holiday of the Christian year, Christmas is observed as a commemoration of the birth of Jesus of Nazareth.
-	*/
+	// Christmas
+	if atMD(date, 12, 25) {
+		desc = "Christmas"
+		flag = true
+	}
 
 	// Red days
 	if desc != "" {
@@ -99,9 +141,6 @@ func (nc USCalendar) RedDay(date time.Time) (bool, string, bool) {
 // than one notable event that day) and true/false depending on if it's a flag
 // flying day or not.
 func (nc USCalendar) NotableDay(date time.Time) (bool, string, bool) {
-
-	// Source: http://www.timeanddate.no/kalender/merkedag-innhold
-	// Source: http://no.wikipedia.org/wiki/Norges_offisielle_flaggdager
 
 	var (
 	//descriptions []string

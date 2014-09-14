@@ -75,23 +75,23 @@ func atSouthernSolstice(date time.Time) bool {
 	return atDate(date, southernSolstice(date.Year()))
 }
 
-// Check if the given date is at the Nth weekday (for istance Sunday) of a given month
-func atNthWeekdayOfMonth(date time.Time, n int, weekday time.Weekday, month time.Month) bool {
-	if date.Month() != month {
-		return false
-	}
-	nthDay, err := nthWeekdayOfMonth(date, n, weekday)
-	if err != nil {
-		return false
-	}
-	if atDate(date, nthDay) {
-		return true
+// Inauguration day. 21st of January, unless if it is a sunday, then it's the 20th.
+func atInaugurationDay(date time.Time) bool {
+	// Election day, 2000, 2004, 2008, 2012 etc
+	if (date.Year() % 4) == 0 {
+		// Normally on the 21st
+		if atMD(date, 1, 21) {
+			if date.Weekday() != time.Sunday { // not a sunday
+				return true
+			}
+		}
+		// The day before, if the 21st is s sunday
+		if atMD(date, 1, 20) {
+			// if tomorrow is a sunday, this is election day
+			if date.AddDate(0, 0, 1).Weekday() == time.Sunday {
+				return true
+			}
+		}
 	}
 	return false
-}
-
-// Birthday of Dr. Martin Luther King, Jr.
-// Third monday in January
-func atDrMartinLutherKingJrBirthday(date time.Time) bool {
-	return atNthWeekdayOfMonth(date, 3, time.Monday, time.January)
 }
