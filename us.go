@@ -47,6 +47,12 @@ func (nc USCalendar) RedDay(date time.Time) (bool, string, bool) {
 		desc = "Sunday"
 	}
 
+	// Election Day
+	if atElectionDay(date) {
+		desc = "Election Day"
+		flag = false
+	}
+
 	// New Year's Day
 	if atMD(date, 1, 1) {
 		desc = "New Year's Day"
@@ -55,11 +61,11 @@ func (nc USCalendar) RedDay(date time.Time) (bool, string, bool) {
 
 	// Birthday of Dr. Martin Luther King, Jr.
 	if atNthWeekdayOfMonth(date, 3, time.Monday, time.January) {
-		desc = "Birthday of Dr. Martin Luther King, Jr."
+		desc = "Martin Luther King Day"
 		flag = true
 	}
 
-	// Inauguration day
+	// Inauguration Day
 	if atInaugurationDay(date) {
 		desc = "Inauguration Day"
 		flag = true
@@ -71,9 +77,9 @@ func (nc USCalendar) RedDay(date time.Time) (bool, string, bool) {
 		flag = true
 	}
 
-	// Washington's Birthday / Presidents' day
+	// Washington's Birthday / Presidents' Day
 	if atNthWeekdayOfMonth(date, 3, time.Monday, time.February) {
-		desc = "Washington's Birthday"
+		desc = "Presidents' Day"
 		flag = true
 	}
 
@@ -121,7 +127,7 @@ func (nc USCalendar) RedDay(date time.Time) (bool, string, bool) {
 
 	// Christmas
 	if atMD(date, 12, 25) {
-		desc = "Christmas"
+		desc = "Christmas Day"
 		flag = true
 	}
 
@@ -161,11 +167,9 @@ func (nc USCalendar) NotableDay(date time.Time) (bool, string, bool) {
 // Checks if a given date is in a notable time range (summer holidays, for instance)
 func (nc USCalendar) NotablePeriod(date time.Time) (bool, string) {
 	// TODO:
-	// uke 28, 29 og 30, fellesferie
-	// jul
-	// fastelavn
-	// faste
-	// sommer/vinter/vår/høst (legg denne først i listen)
+	// christmas time
+	// summer/winter/spring/autumn time
+	// etc
 	return false, ""
 }
 

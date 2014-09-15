@@ -35,6 +35,8 @@ func NewCalendar(locCode string, cache bool) (Calendar, error) {
 	switch locCode {
 	case "nb_NO":
 		cal = NewNorwegianCalendar()
+	case "en_US":
+		cal = NewUSCalendar()
 	default:
 		supported = false
 	}

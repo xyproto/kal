@@ -95,3 +95,23 @@ func atInaugurationDay(date time.Time) bool {
 	}
 	return false
 }
+
+// The Tuesday following the first Monday in November
+func atElectionDay(date time.Time) bool {
+	// Ensure that we are in November
+	if date.Month() != time.November {
+		return false
+	}
+
+	// Find the first Monday in November
+	monday, err := nthWeekdayOfMonth(date, 1, time.Monday)
+	if err != nil {
+		return false
+	}
+
+	// Find the following Tuesday
+	tuesday := monday.AddDate(0, 0, 1)
+
+	// Compare with given date
+	return atDate(date, tuesday)
+}
