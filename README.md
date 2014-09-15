@@ -17,9 +17,9 @@ Features and limitations
 
 * The available functions should be suitable for finding "red days" in any calendar.
 
-* Currently, only the Norwegian calendar has been fully implemented, but more languages and locales can be added.
+* Currently, only the Norwegian and US calendar has been implemented, but more languages and locales can be added.
 
-* The US calendar is almost done, but is a work in progress.
+* The US calendar may need more polish.
 
 * Implementing additional calendars is relatively easy.
 
