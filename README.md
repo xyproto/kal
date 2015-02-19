@@ -34,4 +34,4 @@ General information
 -------------------
 
 * License: MIT
-* Author: Alexander Rødseth
+* Author: Alexander F Rødseth
