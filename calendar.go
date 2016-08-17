@@ -6,9 +6,8 @@ import (
 	"time"
 )
 
-// TODO: Add support for more languages and locales
-
-// A common interface for calendars for all languages and locales
+// Calendar provides a common interface for calendars of all languages
+// and locales
 type Calendar interface {
 	DayName(time.Weekday) string
 	RedDay(time.Time) (bool, string, bool)
@@ -18,10 +17,11 @@ type Calendar interface {
 	MonthName(time.Month) string
 }
 
-/* Creates a new calendar based on a given langauge string.
+/* Create a new calendar based on a given language string.
  *
  *  Supported strings:
  *  nb_NO (Norwegian Bokmål)
+ *  en_US (US English)
  *
  *  The calendar can be cached for faster lookups
  */

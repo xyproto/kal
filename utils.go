@@ -43,7 +43,7 @@ func sundaysInPeriod(date time.Time, days int) int {
 	return numberOfWeekdaysInPeriod(date, days, time.Sunday)
 }
 
-// Find a preceeding sunday, same year
+// Find a preceding sunday, same year
 func searchBackwardsForSunday(date time.Time) (time.Time, error) {
 	return searchBackwardsForDaySameYear(date, time.Sunday)
 }
@@ -92,7 +92,7 @@ func searchForwardsForDaySameMonth(date time.Time, weekday time.Weekday) (time.T
 	return date, errors.New("Could not find a later " + weekday.String() + " the same month!")
 }
 
-// Find a preceeding weekday, same year
+// Find a preceding weekday, same year
 func searchBackwardsForDaySameYear(date time.Time, weekday time.Weekday) (time.Time, error) {
 	// Start with the day before the given date
 	current := date.AddDate(0, 0, -1)
@@ -148,7 +148,7 @@ func nthWeekdayOfMonth(date time.Time, n int, whichWeekday time.Weekday) (time.T
 			specialWeekdayCounter++
 		}
 
-		// Is it the Nth occurance?
+		// Is it the Nth occurence?
 		if specialWeekdayCounter == n {
 			return current, nil
 		}

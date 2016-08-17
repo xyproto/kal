@@ -114,7 +114,7 @@ func southwardEquinox(year int) time.Time {
 	return calculateEquinoxOrSolstice(year, september)
 }
 
-// Winter solstice for the nothern hemisphere
+// Winter solstice for the northern hemisphere
 func southernSolstice(year int) time.Time {
 	december := func(y float64) float64 {
 		return 2451900.05952 + 365242.74049*y - 0.06223*y*y - 0.00823*y*y*y + 0.00032*y*y*y*y
