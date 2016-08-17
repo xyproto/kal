@@ -148,7 +148,7 @@ func nthWeekdayOfMonth(date time.Time, n int, whichWeekday time.Weekday) (time.T
 			specialWeekdayCounter++
 		}
 
-		// Is it the Nth occurence?
+		// Is it the Nth occurrence?
 		if specialWeekdayCounter == n {
 			return current, nil
 		}
