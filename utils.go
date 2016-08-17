@@ -1,4 +1,4 @@
-package moskus
+package calendar
 
 import (
 	"errors"

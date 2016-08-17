@@ -1,5 +1,5 @@
 // Calendar package for finding public holidays ("red days"), easter, notable days, equinoxes, solstices and flag flying days.
-package moskus
+package calendar
 
 import (
 	"errors"

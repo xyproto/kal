@@ -1,4 +1,4 @@
-package moskus
+package calendar
 
 // locale: nb_NO
 
