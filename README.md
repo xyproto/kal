@@ -14,8 +14,9 @@ Online API documentation
 Features and limitations
 ------------------------
 
-* The provided functions should make it possible to find "red days" in the calendar of any country.
-* Currently, "red days" are only added for USA and Norway (pull requests are welcome!)
+* Provides a collection of functions for dealing with dates, intervals between dates and special days like winter solstice.
+* Provides functions for finding flag public holidays ("red days"), easter, notable days, equinoxes, solstices and flag flying days, for some calendars (every country may have different flag flying days).
+* Currently, public holidays and flag flying days are only added for USA and Norway, but pull requests are welcome!
 
 
 General information
