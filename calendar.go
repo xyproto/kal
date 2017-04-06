@@ -37,6 +37,8 @@ func NewCalendar(locCode string, cache bool) (Calendar, error) {
 		cal = NewNorwegianCalendar()
 	case "en_US":
 		cal = NewUSCalendar()
+	case "tr_TR":
+		cal = NewTRCalendar()
 	default:
 		supported = false
 	}
