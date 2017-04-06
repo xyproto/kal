@@ -110,6 +110,29 @@ func (tc TRCalendar) RedDay(date time.Time) (bool, string, bool) {
 	return false, desc, false
 }
 
+// Some days are not red, but special in one way or another.
+// Checks if a given date is notable. Returns true/false if the
+// given date is notable, a comma separated description (in case there are more
+// than one notable event that day) and true/false depending on if it's a flag
+// flying day or not.
+func (tc TRCalendar) NotableDay(date time.Time) (bool, string, bool) {
+
+	var (
+	//descriptions []string
+	//flag         bool
+	)
+
+	// Since days may overlap, "flaggdager" must come first for the flag
+	// flying days to be correct.
+
+	// --- Flag days ---
+
+	// --- Non-flag days ---
+
+	// No notable events
+	return false, "", false
+}
+
 // Checks if a given date is in a notable time range (summer holidays, for instance)
 func (tc TRCalendar) NotablePeriod(date time.Time) (bool, string) {
 	// TODO:
