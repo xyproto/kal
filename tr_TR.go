@@ -1,10 +1,8 @@
 package calendar
 
-// locale: en_US
+// locale: tr_TR
 
 // NOTE: Work in progress!
-
-// Anything that's specific to the US, with the exception of some movable dates which are in movable.go
 // This calendar has a corresponding locale code in the NewCalendar function in calendar.go
 
 import (
