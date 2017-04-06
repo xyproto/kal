@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// Checks if the given date is at Palm Sunday (the Sunday before easter)
+// Checks if the given date is at Palm Sunday (the Sunday before Easter)
 func atPalmSunday(date time.Time) bool {
 	easter := EasterDay(date.Year())
 	// There will always be a sunday before easter for any given year,
@@ -85,7 +85,7 @@ func atInaugurationDay(date time.Time) bool {
 				return true
 			}
 		}
-		// The day before, if the 21st is s sunday
+		// The day before, if the 21st is a sunday
 		if atMD(date, 1, 20) {
 			// if tomorrow is a sunday, this is election day
 			if date.AddDate(0, 0, 1).Weekday() == time.Sunday {

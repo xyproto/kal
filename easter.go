@@ -25,7 +25,7 @@ func easterDaySpencerJones(year int) (month, day int) {
 	return n, p + 1
 }
 
-// Gauss's method for finding easter day for a given year
+// Gauss's method for finding Easter day for a given year
 func easterDayGauss(year int) (month, day int, err error) {
 	// Source: http://no.it.programmering.delphi.narkive.com/oDY0xYOW/algoritme-for-norske-bevegelige-helligdager
 	if (year < 1583) || (year > 4199) {
@@ -53,7 +53,7 @@ func easterDayGauss(year int) (month, day int, err error) {
 	return month, day, nil
 }
 
-// Checks if a day is at easter day +- a few days
+// Checks if a day is at Easter day +- a few days
 func atEasterPlus(date time.Time, days int) bool {
 	year := date.Year()
 	eastermonth, easterday := easterDaySpencerJones(year)
@@ -62,7 +62,7 @@ func atEasterPlus(date time.Time, days int) bool {
 	return atDate(date, when)
 }
 
-// Returns the easter day for any given year
+// Returns the Easter day for any given year
 func EasterDay(year int) time.Time {
 	month, day := easterDaySpencerJones(year)
 	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)

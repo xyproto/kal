@@ -1,4 +1,4 @@
-// Calendar package for finding public holidays ("red days"), easter, notable days, equinoxes, solstices and flag flying days.
+// Calendar package for finding public holidays ("red days"), Easter, notable days, equinoxes, solstices and flag flying days.
 package calendar
 
 import (
@@ -22,6 +22,7 @@ type Calendar interface {
  *  Supported strings:
  *  nb_NO (Norwegian Bokmål)
  *  en_US (US English)
+ *  tr_TR (Turkish)
  *
  *  The calendar can be cached for faster lookups
  */

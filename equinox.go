@@ -13,7 +13,7 @@ const (
 	degrees = math.Pi / 180.0
 )
 
-//// Varjevndogn / Vernal equinox / March equinox
+//// Vårjevndogn / Vernal equinox / March equinox
 //func Equinox(year int) time.Time {
 //	// Source: http://www.phpro.org/examples/Get-Vernal-Equinox.html
 //	days_from_base := 79.3125 + float64(year - 1970) * 365.2425
