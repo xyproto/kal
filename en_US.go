@@ -153,12 +153,11 @@ func (nc USCalendar) NotableDay(date time.Time) (bool, string, bool) {
 	//flag         bool
 	)
 
-	// Since days may overlap, "flaggdager" must come first for the flag
-	// flying days to be correct.
+	// Since days may overlap, flag flying days must come first.
 
-	// --- Flag days ---
+	// --- Flag flying days ---
 
-	// --- Non-flag days ---
+	// --- Other days ---
 
 	// No notable events
 	return false, "", false
@@ -167,7 +166,7 @@ func (nc USCalendar) NotableDay(date time.Time) (bool, string, bool) {
 // Checks if a given date is in a notable time range (summer holidays, for instance)
 func (nc USCalendar) NotablePeriod(date time.Time) (bool, string) {
 	// TODO:
-	// christmas time
+	// Christmas time
 	// summer/winter/spring/autumn time
 	// etc
 	return false, ""
