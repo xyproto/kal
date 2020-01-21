@@ -1,3 +1,3 @@
 module github.com/xyproto/calendar
 
-go 1.12
+go 1.4
