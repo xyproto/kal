@@ -1,4 +1,4 @@
-# Calendar [![Build Status](https://travis-ci.org/xyproto/calendar.svg?branch=master)](https://travis-ci.org/xyproto/calendar) [![GoDoc](https://godoc.org/github.com/xyproto/calendar?status.svg)](http://godoc.org/github.com/xyproto/calendar) [![License](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/xyproto/calendar/master/LICENSE)
+# Calendar [![Build Status](https://travis-ci.com/xyproto/calendar.svg?branch=master)](https://travis-ci.com/xyproto/calendar) [![GoDoc](https://godoc.org/github.com/xyproto/calendar?status.svg)](http://godoc.org/github.com/xyproto/calendar) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/calendar/master/LICENSE)
 
 Package for finding public holidays, easter, notable days, equinoxes, solstices and flag flying days. Deals with dates and intervals between dates.
 
