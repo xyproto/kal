@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -30,9 +29,10 @@ func monthToNorwegianString(month time.Month) string {
 	return nc.MonthName(month)
 }
 
-func centeredMonthYearString(year int, month time.Month, norwegian bool, width int) string {
+func centeredMonthYearString(year int, month time.Month, langEnv string, width int) string {
 	var s string
-	if norwegian {
+	// TODO: Use functions from the calendar package instead
+	if langEnv == "nb_NO" {
 		s = monthToNorwegianString(month)
 	} else {
 		s = month.String()
@@ -41,8 +41,8 @@ func centeredMonthYearString(year int, month time.Month, norwegian bool, width i
 	return centerText(s, width)
 }
 
-func weekdayHeader(mondayFirst, norwegian bool) string {
-	if norwegian {
+func weekdayHeader(mondayFirst bool, langEnv string) string {
+	if langEnv == "nb_NO" {
 		// TODO: Use nc.DayName() and extract the first two letters of each
 		if mondayFirst {
 			return "ma ti on to fr lø sø"
@@ -69,9 +69,9 @@ func weekdayPosition(mondayFirst bool, current time.Time) int {
 	return weekdayPosition
 }
 
-func MonthCalendar(cal *calendar.Calendar, norwegianCalendar bool, givenYear int, givenMonth time.Month) string {
+func MonthCalendar(cal *calendar.Calendar, langEnv string, givenYear int, givenMonth time.Month) string {
 	mondayFirst := false
-	if norwegianCalendar {
+	if langEnv == "nb_NO" {
 		mondayFirst = true
 	}
 
@@ -81,10 +81,10 @@ func MonthCalendar(cal *calendar.Calendar, norwegianCalendar bool, givenYear int
 	current := time.Date(givenYear, givenMonth, 1, 0, 0, 0, 0, now.Location())
 
 	// Month and year, centered
-	sb.WriteString(centeredMonthYearString(givenYear, givenMonth, norwegianCalendar, 20) + "\n")
+	sb.WriteString(centeredMonthYearString(givenYear, givenMonth, langEnv, 20) + "\n")
 
 	// The shortened names of the week days
-	sb.WriteString(weekdayHeader(mondayFirst, norwegianCalendar) + "\n")
+	sb.WriteString(weekdayHeader(mondayFirst, langEnv) + "\n")
 
 	// Indentation before the first day of the month
 	sb.WriteString(strings.Repeat(" ", weekdayPosition(mondayFirst, current)*3))
@@ -152,15 +152,14 @@ func main() {
 		}
 	}
 
-	langEnv := strings.TrimSuffix(env.Str("LANG"), ".UTF-8")
-
-	cal, err := calendar.NewCalendar(langEnv, true)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	mc := MonthCalendar(&cal, langEnv == "nb_NO", currentYear, currentMonth)
-
 	o := textoutput.New()
+
+	langEnv := strings.TrimSuffix(env.Str("LANG"), ".UTF-8")
+	cal, err := calendar.NewCalendar(langEnv, true)
+	if err != nil || env.Str("LC_ALL") == "C" {
+		langEnv = "en_US" // default to en_US
+	}
+	mc := MonthCalendar(&cal, langEnv, currentYear, currentMonth)
+
 	o.Println(mc)
 }
