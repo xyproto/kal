@@ -5,7 +5,7 @@ Package for finding public holidays, easter, notable days, equinoxes, solstices 
 Online API documentation
 ------------------------
 
-[godoc.org](http://godoc.org/github.com/xyproto/calendar)
+* [godoc.org](http://godoc.org/github.com/xyproto/calendar)
 
 
 Features and limitations
@@ -19,6 +19,6 @@ Features and limitations
 General information
 -------------------
 
-* Version: 1.1
-* License: MIT
+* Version: 1.1.0
+* License: BSD-3
 * Author: Alexander F. Rødseth
