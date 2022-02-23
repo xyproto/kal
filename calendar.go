@@ -57,6 +57,16 @@ func FlagDay(cal Calendar, date time.Time) bool {
 	return thirdBool(date, cal.RedDay) || thirdBool(date, cal.NotableDay)
 }
 
+// Checks if a given date is a "red" day or not
+func RedDay(cal Calendar, date time.Time) bool {
+	return thirdBool(date, cal.RedDay)
+}
+
+// Checks if a given date is a notable day or not
+func NotableDay(cal Calendar, date time.Time) bool {
+	return thirdBool(date, cal.NotableDay)
+}
+
 // Describe what type of day a given date is
 func Describe(cal Calendar, date time.Time) string {
 	fulldesc := ""
