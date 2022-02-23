@@ -26,12 +26,7 @@ type Calendar interface {
  *
  *  The calendar can be cached for faster lookups
  */
-func NewCalendar(locCode string, cache bool) (Calendar, error) {
-	var (
-		cal       Calendar
-		supported bool = true
-	)
-
+func NewCalendar(locCode string, cache bool) (cal Calendar, err error) {
 	// Find the corresponding calendar struct for the given locale
 	switch locCode {
 	case "nb_NO":
@@ -41,19 +36,13 @@ func NewCalendar(locCode string, cache bool) (Calendar, error) {
 	case "tr_TR":
 		cal = NewTRCalendar()
 	default:
-		supported = false
-	}
-
-	if !supported {
-		// Return an error
 		return cal, errors.New("Locale not supported: " + locCode)
 	}
-	if !cache {
-		// Return a calendar without cache
-		return cal, nil
+	if cache {
+		// Return a calendar with cache
+		return NewCachedCalendar(cal), nil
 	}
-	// Return a cached calendar
-	return NewCachedCalendar(cal), nil
+	return cal, nil
 }
 
 // Returns the third boolean argument given a time.Time value and
