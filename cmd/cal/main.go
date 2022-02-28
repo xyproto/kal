@@ -79,12 +79,20 @@ func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month)
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<red>%2d</red> ", current.Day()))
 			if isRedDay {
-				descriptions.WriteString(fmt.Sprintf("<red>%2d. %s</red> - %s\n", current.Day(), (*cal).MonthName(givenMonth), calendar.Describe(*cal, current)))
+				if mondayFirst {
+					descriptions.WriteString(fmt.Sprintf("<red>%2d. %s</red> - %s\n", current.Day(), (*cal).MonthName(givenMonth), calendar.Describe(*cal, current)))
+				} else {
+					descriptions.WriteString(fmt.Sprintf("<red>%s %d</red> - %s\n", (*cal).MonthName(givenMonth), current.Day(), calendar.Describe(*cal, current)))
+				}
 			}
 		} else if calendar.FlagDay(*cal, current) { // Flag day
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<lightblue>%2d</lightblue> ", current.Day()))
-			descriptions.WriteString(fmt.Sprintf("<lightblue>%2d. %s</lightblue> - %s (flaggdag)\n", current.Day(), (*cal).MonthName(givenMonth), calendar.Describe(*cal, current)))
+			if mondayFirst {
+				descriptions.WriteString(fmt.Sprintf("<lightblue>%2d. %s</lightblue> - %s (flaggdag)\n", current.Day(), (*cal).MonthName(givenMonth), calendar.Describe(*cal, current)))
+			} else {
+				descriptions.WriteString(fmt.Sprintf("<lightblue>%s %d</lightblue> - %s (flaggdag)\n", (*cal).MonthName(givenMonth), current.Day(), calendar.Describe(*cal, current)))
+			}
 		} else { // Ordinary day
 			sb.WriteString(fmt.Sprintf("%2d ", current.Day()))
 		}
