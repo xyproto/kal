@@ -172,6 +172,10 @@ func (nc USCalendar) NotablePeriod(date time.Time) (bool, string) {
 	return false, ""
 }
 
+func (nc USCalendar) MondayFirst() bool {
+	return false
+}
+
 // An ordinary day
 func (nc USCalendar) NormalDay() string {
 	return "Ordinary"

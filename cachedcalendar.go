@@ -87,3 +87,7 @@ func (calca CachedCalendar) NormalDay() string {
 func (calca CachedCalendar) MonthName(month time.Month) string {
 	return calca.cal.MonthName(month)
 }
+
+func (calca CachedCalendar) MondayFirst() bool {
+	return calca.cal.MondayFirst()
+}

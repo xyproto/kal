@@ -334,6 +334,10 @@ func (nc NorwegianCalendar) NotablePeriod(date time.Time) (bool, string) {
 	return false, ""
 }
 
+func (nc NorwegianCalendar) MondayFirst() bool {
+	return true
+}
+
 // An ordinary day
 func (nc NorwegianCalendar) NormalDay() string {
 	return "Hverdag"

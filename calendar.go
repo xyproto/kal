@@ -15,6 +15,7 @@ type Calendar interface {
 	NormalDay() string
 	NotablePeriod(time.Time) (bool, string)
 	MonthName(time.Month) string
+	MondayFirst() bool
 }
 
 /* Create a new calendar based on a given language string.
@@ -84,6 +85,31 @@ func Describe(cal Calendar, date time.Time) string {
 		return fulldesc
 	}
 	return cal.NormalDay()
+}
+
+// Return a space separated string of the two first letters of every weekday
+func TwoLetterDays(cal Calendar, mondayFirst bool) string {
+	var (
+		i time.Weekday
+		s string
+	)
+	if !mondayFirst {
+		for i = 0; i < 7; i++ {
+			if i != 0 {
+				s += " "
+			}
+			s += string([]rune(cal.DayName(i))[:2])
+		}
+	} else {
+		for i = 1; i < 7; i++ {
+			if i != 1 {
+				s += " "
+			}
+			s += string([]rune(cal.DayName(i))[:2])
+		}
+		s += " " + string([]rune(cal.DayName(time.Weekday(0)))[:2])
+	}
+	return s
 }
 
 // Get the week number, from 1 to 53

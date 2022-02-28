@@ -141,6 +141,10 @@ func (tc TRCalendar) NotablePeriod(date time.Time) (bool, string) {
 	return false, ""
 }
 
+func (tc TRCalendar) MondayFirst() bool {
+	return true
+}
+
 // An ordinary day
 func (tc TRCalendar) NormalDay() string {
 	return "Sıradan"
