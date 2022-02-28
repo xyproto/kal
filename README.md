@@ -16,6 +16,17 @@ Features and limitations
 * Currently, public holidays and flag flying days have only been implemented for USA, Norway and Turkey, but pull requests are welcome!
 
 
+Calendar utility
+----------------
+
+Screenshots:
+
+![nb_NO](img/nb.png) ![tr_TR](img/tr.png) ![en_US](img/us.png)
+
+Installation with Go 1.17 or later:
+
+    go install github.com/xyproto/calendar/cmd/kal@latest
+
 General information
 -------------------
 
