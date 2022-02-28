@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -10,11 +11,12 @@ import (
 	"github.com/xyproto/calendar"
 	"github.com/xyproto/env"
 	"github.com/xyproto/textoutput"
+	"github.com/xyproto/vt100"
 )
 
-// centerText will pad a string with spaces up to the given width,
+// centerPad will pad a string with spaces up to the given width,
 // so that the string is centered.
-func centerText(s string, width int) string {
+func centerPad(s string, width int) string {
 	l := len(s)
 	if l < width {
 		after := (width - l) / 2
@@ -24,21 +26,32 @@ func centerText(s string, width int) string {
 	return s
 }
 
+// rightPad will pad the right side of a string with spaces
+func rightPad(s string, width int) string {
+	l := len(s)
+	if l < width {
+		after := (width - l)
+		return s + strings.Repeat(" ", after)
+	}
+	return s
+}
+
 func monthToNorwegianString(month time.Month) string {
 	var nc calendar.NorwegianCalendar
 	return nc.MonthName(month)
 }
 
-func centeredMonthYearString(year int, month time.Month, langEnv string, width int) string {
-	var s string
-	// TODO: Use functions from the calendar package instead
+func monthToString(month time.Month, langEnv string) string {
 	if langEnv == "nb_NO" {
-		s = monthToNorwegianString(month)
-	} else {
-		s = month.String()
+		return monthToNorwegianString(month)
 	}
+	return month.String()
+}
+
+func centeredMonthYearString(year int, month time.Month, langEnv string, width int) string {
+	s := monthToString(month, langEnv)
 	s += fmt.Sprintf(" %d", year)
-	return centerText(s, width)
+	return centerPad(s, width)
 }
 
 func weekdayHeader(mondayFirst bool, langEnv string) string {
@@ -75,7 +88,7 @@ func MonthCalendar(cal *calendar.Calendar, langEnv string, givenYear int, givenM
 		mondayFirst = true
 	}
 
-	var sb strings.Builder
+	var descriptions, sb strings.Builder
 
 	now := time.Now()
 	current := time.Date(givenYear, givenMonth, 1, 0, 0, 0, 0, now.Location())
@@ -90,46 +103,39 @@ func MonthCalendar(cal *calendar.Calendar, langEnv string, givenYear int, givenM
 	sb.WriteString(strings.Repeat(" ", weekdayPosition(mondayFirst, current)*3))
 
 	// Output all the numbers of the month, with linebreaks at appropriate locations
-	//foundToday := false
-	//wroteArrow := false
 	for current.Month() == givenMonth {
-		if current.Day() == now.Day() {
-			sb.WriteString(fmt.Sprintf("<lightblue>%2d</lightblue> ", current.Day()))
-			//foundToday = true
-		} else if current.Weekday() == time.Sunday || calendar.RedDay(*cal, current) {
+		if current.Day() == now.Day() { // Today
+			sb.WriteString(fmt.Sprintf(vt100.BackgroundBlue.String()+"<white>%2d</white> ", current.Day()))
+		} else if isRedDay := calendar.RedDay(*cal, current); current.Weekday() == time.Sunday || isRedDay { // Red day
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<red>%2d</red> ", current.Day()))
-		} else if calendar.FlagDay(*cal, current) {
+			if isRedDay {
+				descriptions.WriteString(fmt.Sprintf("<red>%2d. %s</red> - %s\n", current.Day(), monthToString(givenMonth, langEnv), calendar.Describe(*cal, current)))
+			}
+		} else if calendar.FlagDay(*cal, current) { // Flag day
 			// TODO: Collect descriptions, then print them below
-			sb.WriteString(fmt.Sprintf("<yellow>%2d</yellow> ", current.Day()))
-		} else {
+			sb.WriteString(fmt.Sprintf("<lightblue>%2d</lightblue> ", current.Day()))
+			descriptions.WriteString(fmt.Sprintf("<lightblue>%2d. %s</lightblue> - %s (flaggdag)\n", current.Day(), monthToString(givenMonth, langEnv), calendar.Describe(*cal, current)))
+		} else { // Ordinary day
 			sb.WriteString(fmt.Sprintf("%2d ", current.Day()))
 		}
 		current = current.AddDate(0, 0, 1)
 
-		if mondayFirst {
-			if current.Weekday() == time.Monday {
-				//if foundToday && !wroteArrow {
-				//sb.WriteString("<white><-</white>")
-				//wroteArrow = true
-				//}
-				sb.WriteString("\n")
-			}
-		} else {
-			if current.Weekday() == time.Sunday {
-				//if foundToday && !wroteArrow {
-				//sb.WriteString("<white><-</white>")
-				//wroteArrow = true
-				//}
-				sb.WriteString("\n")
-			}
+		if (mondayFirst && (current.Weekday() == time.Monday)) || (!mondayFirst && (current.Weekday() == time.Sunday)) {
+			sb.WriteString("\n")
 		}
 	}
 
-	// Final newline
-	sb.WriteString("\n")
+	calendarString := sb.String()
+	if !strings.HasSuffix(calendarString, "\n") {
+		calendarString += "\n"
+	}
 
-	return sb.String()
+	if ds := descriptions.String(); len(ds) > 0 {
+		return calendarString + "\n" + ds
+	}
+
+	return calendarString
 }
 
 func main() {
@@ -140,7 +146,7 @@ func main() {
 
 	// Check if the first given argument is a number. If yes, use that as the current year.
 	if len(os.Args) > 2 {
-		if m, err := strconv.Atoi(os.Args[1]); err == nil { // success
+		if m, err := strconv.Atoi(os.Args[1]); err == nil && m >= 1 && m <= 12 { // success
 			currentMonth = time.Month(m)
 		}
 		if y, err := strconv.Atoi(os.Args[2]); err == nil { // success
@@ -155,9 +161,12 @@ func main() {
 	o := textoutput.New()
 
 	langEnv := strings.TrimSuffix(env.Str("LANG"), ".UTF-8")
-	cal, err := calendar.NewCalendar(langEnv, true)
-	if err != nil || env.Str("LC_ALL") == "C" {
+	if langEnv == "" || langEnv == "C" || env.Str("LC_ALL") == "C" {
 		langEnv = "en_US" // default to en_US
+	}
+	cal, err := calendar.NewCalendar(langEnv, true)
+	if err != nil {
+		log.Fatalln("could not create a calendar with langEnv " + langEnv)
 	}
 	mc := MonthCalendar(&cal, langEnv, currentYear, currentMonth)
 
