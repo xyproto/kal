@@ -36,39 +36,10 @@ func rightPad(s string, width int) string {
 	return s
 }
 
-func monthToNorwegianString(month time.Month) string {
-	var nc calendar.NorwegianCalendar
-	return nc.MonthName(month)
-}
-
-func monthToString(month time.Month, langEnv string) string {
-	if langEnv == "nb_NO" {
-		return monthToNorwegianString(month)
-	}
-	return month.String()
-}
-
-func centeredMonthYearString(year int, month time.Month, langEnv string, width int) string {
-	s := monthToString(month, langEnv)
+func centeredMonthYearString(cal calendar.Calendar, year int, month time.Month, width int) string {
+	s := cal.MonthName(month)
 	s += fmt.Sprintf(" %d", year)
 	return centerPad(s, width)
-}
-
-func weekdayHeader(mondayFirst bool, langEnv string) string {
-	if langEnv == "nb_NO" {
-		// TODO: Use nc.DayName() and extract the first two letters of each
-		if mondayFirst {
-			return "ma ti on to fr lø sø"
-		} else {
-			return "sø ma ti on to fr lø"
-		}
-	} else {
-		if mondayFirst {
-			return "Mo Tu We Th Fr Sa Su"
-		} else {
-			return "Su Mo Tu We Th Fr Sa"
-		}
-	}
 }
 
 func weekdayPosition(mondayFirst bool, current time.Time) int {
@@ -82,11 +53,9 @@ func weekdayPosition(mondayFirst bool, current time.Time) int {
 	return weekdayPosition
 }
 
-func MonthCalendar(cal *calendar.Calendar, langEnv string, givenYear int, givenMonth time.Month) string {
-	mondayFirst := false
-	if langEnv == "nb_NO" {
-		mondayFirst = true
-	}
+func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month) string {
+
+	mondayFirst := (*cal).MondayFirst()
 
 	var descriptions, sb strings.Builder
 
@@ -94,10 +63,10 @@ func MonthCalendar(cal *calendar.Calendar, langEnv string, givenYear int, givenM
 	current := time.Date(givenYear, givenMonth, 1, 0, 0, 0, 0, now.Location())
 
 	// Month and year, centered
-	sb.WriteString(centeredMonthYearString(givenYear, givenMonth, langEnv, 20) + "\n")
+	sb.WriteString("<lightblue>" + centeredMonthYearString(*cal, givenYear, givenMonth, 20) + "</lightblue>\n")
 
 	// The shortened names of the week days
-	sb.WriteString(weekdayHeader(mondayFirst, langEnv) + "\n")
+	sb.WriteString(calendar.TwoLetterDays(*cal, (*cal).MondayFirst()) + "\n")
 
 	// Indentation before the first day of the month
 	sb.WriteString(strings.Repeat(" ", weekdayPosition(mondayFirst, current)*3))
@@ -110,12 +79,12 @@ func MonthCalendar(cal *calendar.Calendar, langEnv string, givenYear int, givenM
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<red>%2d</red> ", current.Day()))
 			if isRedDay {
-				descriptions.WriteString(fmt.Sprintf("<red>%2d. %s</red> - %s\n", current.Day(), monthToString(givenMonth, langEnv), calendar.Describe(*cal, current)))
+				descriptions.WriteString(fmt.Sprintf("<red>%2d. %s</red> - %s\n", current.Day(), (*cal).MonthName(givenMonth), calendar.Describe(*cal, current)))
 			}
 		} else if calendar.FlagDay(*cal, current) { // Flag day
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<lightblue>%2d</lightblue> ", current.Day()))
-			descriptions.WriteString(fmt.Sprintf("<lightblue>%2d. %s</lightblue> - %s (flaggdag)\n", current.Day(), monthToString(givenMonth, langEnv), calendar.Describe(*cal, current)))
+			descriptions.WriteString(fmt.Sprintf("<lightblue>%2d. %s</lightblue> - %s (flaggdag)\n", current.Day(), (*cal).MonthName(givenMonth), calendar.Describe(*cal, current)))
 		} else { // Ordinary day
 			sb.WriteString(fmt.Sprintf("%2d ", current.Day()))
 		}
@@ -158,17 +127,18 @@ func main() {
 		}
 	}
 
-	o := textoutput.New()
-
-	langEnv := strings.TrimSuffix(env.Str("LANG"), ".UTF-8")
-	if langEnv == "" || langEnv == "C" || env.Str("LC_ALL") == "C" {
+	langEnv := strings.TrimSuffix(env.Str("LC_ALL", env.Str("LANG")), ".UTF-8")
+	if langEnv == "C" || env.Str("LC_ALL") == "C" {
 		langEnv = "en_US" // default to en_US
 	}
+
 	cal, err := calendar.NewCalendar(langEnv, true)
 	if err != nil {
 		log.Fatalln("could not create a calendar with langEnv " + langEnv)
 	}
-	mc := MonthCalendar(&cal, langEnv, currentYear, currentMonth)
 
-	o.Println(mc)
+	moCal := MonthCalendar(&cal, currentYear, currentMonth)
+
+	o := textoutput.New()
+	o.Print(moCal)
 }
