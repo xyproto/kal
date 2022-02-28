@@ -62,11 +62,14 @@ func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month)
 	now := time.Now()
 	current := time.Date(givenYear, givenMonth, 1, 0, 0, 0, 0, now.Location())
 
+	_, w := current.ISOWeek()
+	weekString := "w" + strconv.Itoa(w)
+
 	// Month and year, centered
-	sb.WriteString("<lightblue>" + centeredMonthYearString(*cal, givenYear, givenMonth, 20) + "</lightblue>\n")
+	sb.WriteString("<lightblue>" + centeredMonthYearString(*cal, givenYear, givenMonth, 20-len(weekString)) + "</lightblue><darkgray>" + weekString + "</darkgray>\n")
 
 	// The shortened names of the week days
-	sb.WriteString(calendar.TwoLetterDays(*cal, (*cal).MondayFirst()) + "\n")
+	sb.WriteString("<white>" + calendar.TwoLetterDays(*cal, (*cal).MondayFirst()) + "</white>\n")
 
 	// Indentation before the first day of the month
 	sb.WriteString(strings.Repeat(" ", weekdayPosition(mondayFirst, current)*3))
@@ -74,7 +77,7 @@ func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month)
 	// Output all the numbers of the month, with linebreaks at appropriate locations
 	for current.Month() == givenMonth {
 		if current.Day() == now.Day() { // Today
-			sb.WriteString(fmt.Sprintf(vt100.BackgroundBlue.String()+"<white>%2d</white> ", current.Day()))
+			sb.WriteString(fmt.Sprintf(vt100.BackgroundBlue.String()+"<lightyellow>%2d</lightyellow> ", current.Day()))
 		} else if isRedDay := calendar.RedDay(*cal, current); current.Weekday() == time.Sunday || isRedDay { // Red day
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<red>%2d</red> ", current.Day()))
