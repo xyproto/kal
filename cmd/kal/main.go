@@ -17,7 +17,7 @@ import (
 // centerPad will pad a string with spaces up to the given width,
 // so that the string is centered.
 func centerPad(s string, width int) string {
-	l := len(s)
+	l := len([]rune(s))
 	if l < width {
 		after := (width - l) / 2
 		before := (width - l) - after
@@ -28,7 +28,7 @@ func centerPad(s string, width int) string {
 
 // rightPad will pad the right side of a string with spaces
 func rightPad(s string, width int) string {
-	l := len(s)
+	l := len([]rune(s))
 	if l < width {
 		after := (width - l)
 		return s + strings.Repeat(" ", after)
