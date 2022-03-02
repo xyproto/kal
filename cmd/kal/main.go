@@ -53,6 +53,7 @@ func weekdayPosition(mondayFirst bool, current time.Time) int {
 	return weekdayPosition
 }
 
+// MonthCalendar returns a string that is a complete overview of the given month
 func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month) string {
 
 	mondayFirst := (*cal).MondayFirst()
@@ -62,8 +63,12 @@ func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month)
 	now := time.Now()
 	current := time.Date(givenYear, givenMonth, 1, 0, 0, 0, 0, now.Location())
 
-	_, w := current.ISOWeek()
-	weekString := "w" + strconv.Itoa(w)
+	// Add the week, if this is the current month
+	var weekString string
+	if now.Month() == givenMonth && now.Year() == givenYear {
+		_, w := now.ISOWeek()
+		weekString = "w" + strconv.Itoa(w)
+	}
 
 	// Month and year, centered
 	sb.WriteString("<lightblue>" + centeredMonthYearString(*cal, givenYear, givenMonth, 20-len(weekString)) + "</lightblue><darkgray>" + weekString + "</darkgray>\n")
@@ -76,7 +81,7 @@ func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month)
 
 	// Output all the numbers of the month, with linebreaks at appropriate locations
 	for current.Month() == givenMonth {
-		if current.Day() == now.Day() { // Today
+		if current.Day() == now.Day() && current.Month() == now.Month() && current.Year() == now.Year() { // Today
 			sb.WriteString(fmt.Sprintf(vt100.BackgroundBlue.String()+"<lightyellow>%2d</lightyellow> ", current.Day()))
 		} else if isRedDay := calendar.RedDay(*cal, current); current.Weekday() == time.Sunday || isRedDay { // Red day
 			// TODO: Collect descriptions, then print them below
