@@ -141,6 +141,11 @@ func main() {
 		if y, err := strconv.Atoi(os.Args[1]); err == nil { // success
 			currentYear = y
 		}
+		// Assume that a single argument <= 12 was intended to be a month
+		if currentYear >= 1 && currentYear <= 12 {
+			currentMonth = time.Month(currentYear)
+			currentYear = now.Year()
+		}
 	}
 
 	langEnv := strings.TrimSuffix(env.Str("LC_ALL", env.Str("LANG")), ".UTF-8")
