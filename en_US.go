@@ -1,4 +1,4 @@
-package calendar
+package kal
 
 // locale: en_US
 

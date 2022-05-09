@@ -1,10 +1,10 @@
-# Calendar [![GoDoc](https://godoc.org/github.com/xyproto/calendar?status.svg)](http://godoc.org/github.com/xyproto/calendar) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/calendar/master/LICENSE)
+# Kal [![GoDoc](https://godoc.org/github.com/xyproto/kal?status.svg)](http://godoc.org/github.com/xyproto/kal) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/kal/master/LICENSE)
 
 Package for finding public holidays, easter, notable days, equinoxes, solstices and flag flying days. Deals with dates and intervals between dates.
 
 ## Online API documentation
 
-* [godoc.org](http://godoc.org/github.com/xyproto/calendar)
+* [godoc.org](http://godoc.org/github.com/xyproto/kal)
 
 ## Features and limitations
 
@@ -12,7 +12,7 @@ Package for finding public holidays, easter, notable days, equinoxes, solstices 
 * Provides functions for finding public holidays ("red days"), easter, notable days, equinoxes, solstices and flag flying days, for some calendars (every country may have different flag flying days).
 * Currently, public holidays and flag flying days have only been implemented for USA, Norway and Turkey, but pull requests are welcome!
 
-## Calendar utility
+## Kal utility
 
 ### Screenshots
 
@@ -32,10 +32,10 @@ Package for finding public holidays, easter, notable days, equinoxes, solstices 
 
 With Go 1.17 or later:
 
-    go install github.com/xyproto/calendar/cmd/kal@latest
+    go install github.com/xyproto/kal/cmd/kal@latest
 
 ## General information
 
 * Version: 1.2.1
 * License: BSD-3
-* Author: Alexander F. Rødseth
+* Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;

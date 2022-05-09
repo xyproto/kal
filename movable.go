@@ -1,4 +1,4 @@
-package calendar
+package kal
 
 // Movable dates
 

@@ -1,5 +1,5 @@
-// Calendar package for finding public holidays ("red days"), Easter, notable days, equinoxes, solstices and flag flying days.
-package calendar
+// Kal is a calendar package for finding public holidays ("red days"), Easter, notable days, equinoxes, solstices and flag flying days.
+package kal
 
 import (
 	"errors"
