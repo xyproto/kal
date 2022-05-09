@@ -81,19 +81,28 @@ func MonthCalendar(cal *kal.Calendar, givenYear int, givenMonth time.Month) stri
 
 	// Output all the numbers of the month, with linebreaks at appropriate locations
 	for current.Month() == givenMonth {
+		isFlagDay := kal.FlagDay(*cal, current)
 		if current.Day() == now.Day() && current.Month() == now.Month() && current.Year() == now.Year() { // Today
 			sb.WriteString(fmt.Sprintf(vt100.BackgroundBlue.String()+"<lightyellow>%2d</lightyellow> ", current.Day()))
 		} else if isRedDay := kal.RedDay(*cal, current); current.Weekday() == time.Sunday || isRedDay { // Red day
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<red>%2d</red> ", current.Day()))
 			if isRedDay {
-				if mondayFirst {
-					descriptions.WriteString(fmt.Sprintf("<red>%2d. %s</red> - %s\n", current.Day(), (*cal).MonthName(givenMonth), kal.Describe(*cal, current)))
+				if isFlagDay {
+					if mondayFirst {
+						descriptions.WriteString(fmt.Sprintf("<lightblue>%2d. %s</lightblue> - %s (flaggdag)\n", current.Day(), (*cal).MonthName(givenMonth), kal.Describe(*cal, current)))
+					} else {
+						descriptions.WriteString(fmt.Sprintf("<lightblue>%s %d</lightblue> - %s (flaggdag)\n", (*cal).MonthName(givenMonth), current.Day(), kal.Describe(*cal, current)))
+					}
 				} else {
-					descriptions.WriteString(fmt.Sprintf("<red>%s %d</red> - %s\n", (*cal).MonthName(givenMonth), current.Day(), kal.Describe(*cal, current)))
+					if mondayFirst {
+						descriptions.WriteString(fmt.Sprintf("<red>%2d. %s</red> - %s\n", current.Day(), (*cal).MonthName(givenMonth), kal.Describe(*cal, current)))
+					} else {
+						descriptions.WriteString(fmt.Sprintf("<red>%s %d</red> - %s\n", (*cal).MonthName(givenMonth), current.Day(), kal.Describe(*cal, current)))
+					}
 				}
 			}
-		} else if kal.FlagDay(*cal, current) { // Flag day
+		} else if isFlagDay { // Flag day
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<lightblue>%2d</lightblue> ", current.Day()))
 			if mondayFirst {
@@ -104,6 +113,7 @@ func MonthCalendar(cal *kal.Calendar, givenYear int, givenMonth time.Month) stri
 		} else { // Ordinary day
 			sb.WriteString(fmt.Sprintf("%2d ", current.Day()))
 		}
+
 		current = current.AddDate(0, 0, 1)
 
 		if (mondayFirst && (current.Weekday() == time.Monday)) || (!mondayFirst && (current.Weekday() == time.Sunday)) {
