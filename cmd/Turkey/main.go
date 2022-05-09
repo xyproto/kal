@@ -2,11 +2,11 @@ package Turkey
 
 import (
 	"fmt"
+	"github.com/xyproto/kal"
 	"time"
-	"github.com/xyproto/calendar"
 )
 
-func datebonanza(cal calendar.Calendar, year int, month time.Month) {
+func datebonanza(cal kal.Calendar, year int, month time.Month) {
 	fmt.Println(month.String(), year)
 	fmt.Println("====================")
 
@@ -30,14 +30,14 @@ func datebonanza(cal calendar.Calendar, year int, month time.Month) {
 }
 
 // List flag days
-func flag(cal calendar.Calendar, year int) {
+func flag(cal kal.Calendar, year int) {
 	current := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
 
 	// As long as we are in the same year
 	for current.Year() == year {
 
-		if flag := calendar.FlagDay(cal, current); flag {
-			fmt.Printf("%s (%s) is a flag flying day\n", calendar.Describe(cal, current), current.String()[:10])
+		if flag := kal.FlagDay(cal, current); flag {
+			fmt.Printf("%s (%s) is a flag flying day\n", kal.Describe(cal, current), current.String()[:10])
 		}
 
 		// Advance to the next day
@@ -48,7 +48,7 @@ func flag(cal calendar.Calendar, year int) {
 }
 
 func main() {
-	cal, err := calendar.NewCalendar("tr_TR", true)
+	cal, err := kal.NewCalendar("tr_TR", true)
 	if err != nil {
 		panic("Could not create a TR calendar!")
 	}
@@ -57,7 +57,7 @@ func main() {
 	year := 2016
 
 	// When is easter this year?
-	easter := calendar.EasterDay(year)
+	easter := kal.EasterDay(year)
 	fmt.Printf("Easter %d is at %s\n", year, easter.String()[:10])
 
 	// Show some info for March this year

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/xyproto/calendar"
+	"github.com/xyproto/kal"
 )
 
 // List all the days of a given month
-func datebonanza(cal calendar.Calendar, year int, month time.Month) {
+func datebonanza(cal kal.Calendar, year int, month time.Month) {
 	fmt.Println(month.String(), year)
 	fmt.Println("====================")
 
@@ -32,7 +32,7 @@ func datebonanza(cal calendar.Calendar, year int, month time.Month) {
 }
 
 // List notable days
-func notable(cal calendar.Calendar, year int) {
+func notable(cal kal.Calendar, year int) {
 	current := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
 
 	// As long as we are in the same year
@@ -50,14 +50,14 @@ func notable(cal calendar.Calendar, year int) {
 }
 
 // List flag days
-func flag(cal calendar.Calendar, year int) {
+func flag(cal kal.Calendar, year int) {
 	current := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
 
 	// As long as we are in the same year
 	for current.Year() == year {
 
-		if flag := calendar.FlagDay(cal, current); flag {
-			fmt.Printf("%s (%s) is a flag flying day\n", calendar.Describe(cal, current), current.String()[:10])
+		if flag := kal.FlagDay(cal, current); flag {
+			fmt.Printf("%s (%s) is a flag flying day\n", kal.Describe(cal, current), current.String()[:10])
 		}
 
 		// Advance to the next day
@@ -68,7 +68,7 @@ func flag(cal calendar.Calendar, year int) {
 }
 
 func main() {
-	cal, err := calendar.NewCalendar("en_US", true)
+	cal, err := kal.NewCalendar("en_US", true)
 	if err != nil {
 		panic("Could not create a US calendar!")
 	}
@@ -77,7 +77,7 @@ func main() {
 	year := 2016
 
 	// When is easter this year?
-	easter := calendar.EasterDay(year)
+	easter := kal.EasterDay(year)
 	fmt.Printf("Easter %d is at %s\n", year, easter.String()[:10])
 
 	// Show some info for March this year

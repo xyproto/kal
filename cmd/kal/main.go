@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/xyproto/calendar"
 	"github.com/xyproto/env"
+	"github.com/xyproto/kal"
 	"github.com/xyproto/textoutput"
 	"github.com/xyproto/vt100"
 )
@@ -36,7 +36,7 @@ func rightPad(s string, width int) string {
 	return s
 }
 
-func centeredMonthYearString(cal calendar.Calendar, year int, month time.Month, width int) string {
+func centeredMonthYearString(cal kal.Calendar, year int, month time.Month, width int) string {
 	s := cal.MonthName(month)
 	s += fmt.Sprintf(" %d", year)
 	return centerPad(s, width)
@@ -54,7 +54,7 @@ func weekdayPosition(mondayFirst bool, current time.Time) int {
 }
 
 // MonthCalendar returns a string that is a complete overview of the given month
-func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month) string {
+func MonthCalendar(cal *kal.Calendar, givenYear int, givenMonth time.Month) string {
 
 	mondayFirst := (*cal).MondayFirst()
 
@@ -74,7 +74,7 @@ func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month)
 	sb.WriteString("<lightblue>" + centeredMonthYearString(*cal, givenYear, givenMonth, 20-len(weekString)) + "</lightblue><darkgray>" + weekString + "</darkgray>\n")
 
 	// The shortened names of the week days
-	sb.WriteString("<white>" + calendar.TwoLetterDays(*cal, (*cal).MondayFirst()) + "</white>\n")
+	sb.WriteString("<white>" + kal.TwoLetterDays(*cal, (*cal).MondayFirst()) + "</white>\n")
 
 	// Indentation before the first day of the month
 	sb.WriteString(strings.Repeat(" ", weekdayPosition(mondayFirst, current)*3))
@@ -83,23 +83,23 @@ func MonthCalendar(cal *calendar.Calendar, givenYear int, givenMonth time.Month)
 	for current.Month() == givenMonth {
 		if current.Day() == now.Day() && current.Month() == now.Month() && current.Year() == now.Year() { // Today
 			sb.WriteString(fmt.Sprintf(vt100.BackgroundBlue.String()+"<lightyellow>%2d</lightyellow> ", current.Day()))
-		} else if isRedDay := calendar.RedDay(*cal, current); current.Weekday() == time.Sunday || isRedDay { // Red day
+		} else if isRedDay := kal.RedDay(*cal, current); current.Weekday() == time.Sunday || isRedDay { // Red day
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<red>%2d</red> ", current.Day()))
 			if isRedDay {
 				if mondayFirst {
-					descriptions.WriteString(fmt.Sprintf("<red>%2d. %s</red> - %s\n", current.Day(), (*cal).MonthName(givenMonth), calendar.Describe(*cal, current)))
+					descriptions.WriteString(fmt.Sprintf("<red>%2d. %s</red> - %s\n", current.Day(), (*cal).MonthName(givenMonth), kal.Describe(*cal, current)))
 				} else {
-					descriptions.WriteString(fmt.Sprintf("<red>%s %d</red> - %s\n", (*cal).MonthName(givenMonth), current.Day(), calendar.Describe(*cal, current)))
+					descriptions.WriteString(fmt.Sprintf("<red>%s %d</red> - %s\n", (*cal).MonthName(givenMonth), current.Day(), kal.Describe(*cal, current)))
 				}
 			}
-		} else if calendar.FlagDay(*cal, current) { // Flag day
+		} else if kal.FlagDay(*cal, current) { // Flag day
 			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<lightblue>%2d</lightblue> ", current.Day()))
 			if mondayFirst {
-				descriptions.WriteString(fmt.Sprintf("<lightblue>%2d. %s</lightblue> - %s (flaggdag)\n", current.Day(), (*cal).MonthName(givenMonth), calendar.Describe(*cal, current)))
+				descriptions.WriteString(fmt.Sprintf("<lightblue>%2d. %s</lightblue> - %s (flaggdag)\n", current.Day(), (*cal).MonthName(givenMonth), kal.Describe(*cal, current)))
 			} else {
-				descriptions.WriteString(fmt.Sprintf("<lightblue>%s %d</lightblue> - %s (flaggdag)\n", (*cal).MonthName(givenMonth), current.Day(), calendar.Describe(*cal, current)))
+				descriptions.WriteString(fmt.Sprintf("<lightblue>%s %d</lightblue> - %s (flaggdag)\n", (*cal).MonthName(givenMonth), current.Day(), kal.Describe(*cal, current)))
 			}
 		} else { // Ordinary day
 			sb.WriteString(fmt.Sprintf("%2d ", current.Day()))
@@ -153,7 +153,7 @@ func main() {
 		langEnv = "en_US" // default to en_US
 	}
 
-	cal, err := calendar.NewCalendar(langEnv, true)
+	cal, err := kal.NewCalendar(langEnv, true)
 	if err != nil {
 		log.Fatalln("could not create a calendar with langEnv " + langEnv)
 	}
