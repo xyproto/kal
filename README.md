@@ -1,4 +1,4 @@
-# Kal [![GoDoc](https://godoc.org/github.com/xyproto/kal?status.svg)](http://godoc.org/github.com/xyproto/kal) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/kal/master/LICENSE)
+# Kal [![GoDoc](https://godoc.org/github.com/xyproto/kal?status.svg)](http://godoc.org/github.com/xyproto/kal) [![License](http://img.shields.io/badge/license-BSD-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/kal/master/LICENSE)
 
 Package for finding public holidays, easter, notable days, equinoxes, solstices and flag flying days. Deals with dates and intervals between dates.
 
