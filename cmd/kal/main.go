@@ -37,8 +37,7 @@ func rightPad(s string, width int) string {
 }
 
 func centeredMonthYearString(cal kal.Calendar, year int, month time.Month, width int) string {
-	s := cal.MonthName(month)
-	s += fmt.Sprintf(" %d", year)
+	s := fmt.Sprintf("%s %d", cal.MonthName(month), year)
 	return centerPad(s, width)
 }
 
@@ -85,8 +84,8 @@ func MonthCalendar(cal *kal.Calendar, givenYear int, givenMonth time.Month) stri
 		if current.Day() == now.Day() && current.Month() == now.Month() && current.Year() == now.Year() { // Today
 			sb.WriteString(fmt.Sprintf(vt100.BackgroundBlue.String()+"<lightyellow>%2d</lightyellow> ", current.Day()))
 		} else if isRedDay := kal.RedDay(*cal, current); current.Weekday() == time.Sunday || isRedDay { // Red day
-			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<red>%2d</red> ", current.Day()))
+			// Collect descriptions, then print them below
 			if isRedDay {
 				if isFlagDay {
 					if mondayFirst {
@@ -103,8 +102,8 @@ func MonthCalendar(cal *kal.Calendar, givenYear int, givenMonth time.Month) stri
 				}
 			}
 		} else if isFlagDay { // Flag day
-			// TODO: Collect descriptions, then print them below
 			sb.WriteString(fmt.Sprintf("<lightblue>%2d</lightblue> ", current.Day()))
+			// Collect descriptions, then print them below
 			if mondayFirst {
 				descriptions.WriteString(fmt.Sprintf("<lightblue>%2d. %s</lightblue> - %s (flaggdag)\n", current.Day(), (*cal).MonthName(givenMonth), kal.Describe(*cal, current)))
 			} else {
@@ -165,11 +164,10 @@ func main() {
 
 	cal, err := kal.NewCalendar(langEnv, true)
 	if err != nil {
-		log.Fatalln("could not create a calendar with langEnv " + langEnv)
+		log.Fatalln("could not create a calendar using locale " + langEnv)
 	}
 
 	moCal := MonthCalendar(&cal, currentYear, currentMonth)
 
-	o := textoutput.New()
-	o.Print(moCal)
+	textoutput.New().Print(moCal)
 }
