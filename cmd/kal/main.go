@@ -10,8 +10,7 @@ import (
 
 	"github.com/xyproto/env"
 	"github.com/xyproto/kal"
-	"github.com/xyproto/textoutput"
-	"github.com/xyproto/vt100"
+	"github.com/xyproto/vt"
 )
 
 // centerPad will pad a string with spaces up to the given width,
@@ -82,7 +81,7 @@ func MonthCalendar(cal *kal.Calendar, givenYear int, givenMonth time.Month) stri
 	for current.Month() == givenMonth {
 		isFlagDay := kal.FlagDay(*cal, current)
 		if current.Day() == now.Day() && current.Month() == now.Month() && current.Year() == now.Year() { // Today
-			sb.WriteString(fmt.Sprintf(vt100.BackgroundBlue.String()+"<lightyellow>%2d</lightyellow> ", current.Day()))
+			sb.WriteString(fmt.Sprintf(vt.BackgroundBlue.String()+"<lightyellow>%2d</lightyellow> ", current.Day()))
 		} else if isRedDay := kal.RedDay(*cal, current); current.Weekday() == time.Sunday || isRedDay { // Red day
 			sb.WriteString(fmt.Sprintf("<red>%2d</red> ", current.Day()))
 			// Collect descriptions, then print them below
@@ -169,5 +168,5 @@ func main() {
 
 	moCal := MonthCalendar(&cal, currentYear, currentMonth)
 
-	textoutput.New().Print(moCal)
+	vt.New().Print(moCal)
 }
