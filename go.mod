@@ -6,7 +6,7 @@ toolchain go1.24.5
 
 require (
 	github.com/xyproto/env v1.9.1
-	github.com/xyproto/vt v1.2.5
+	github.com/xyproto/vt v1.2.8
 )
 
 require (

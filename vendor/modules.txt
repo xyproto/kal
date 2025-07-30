@@ -20,7 +20,7 @@ github.com/xyproto/env
 # github.com/xyproto/env/v2 v2.5.3
 ## explicit; go 1.19
 github.com/xyproto/env/v2
-# github.com/xyproto/vt v1.2.5
+# github.com/xyproto/vt v1.2.8
 ## explicit; go 1.24.4
 github.com/xyproto/vt
 # golang.org/x/sys v0.34.0
